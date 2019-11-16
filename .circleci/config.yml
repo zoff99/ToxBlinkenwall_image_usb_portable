@@ -11,7 +11,7 @@ jobs:
   buildme:
     working_directory: ~/work
     machine:
-      image: ubuntu:16.04
+      image: ubuntu-1604:201903-01
 
     steps:
       - checkout
