@@ -11,7 +11,7 @@ jobs:
   buildme:
     working_directory: ~/work
     machine:
-      image: ubuntu-1804
+      image: ubuntu:bionic
 
     steps:
       - checkout
