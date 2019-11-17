@@ -188,6 +188,7 @@ apt-get install -y --force-yes firmware-linux-nonfree
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" kbd keyboard-configuration
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-setup-linux
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-setup
+apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-data
 apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" cryptsetup
 
 # reset
@@ -486,7 +487,7 @@ cat \
 
 # create 240MB ext4 partition image -----------
 dd if=/dev/zero of=${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img bs=4k count=60000
-mkfs.ext4 -L tbwpersist ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img
+mkfs.ext4 -U "0e113e75-b4df-418d-98f5-da6a763c1228" -L tbwpersist ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img
 mkdir -p ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/
 mount -o loop ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/
 touch ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/__tbw_persist_part__

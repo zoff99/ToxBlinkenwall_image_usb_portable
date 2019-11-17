@@ -1,5 +1,9 @@
 #! /bin/bash
 
+# ignore CTRL-C press in this script ---------
+trap '' INT
+# ignore CTRL-C press in this script ---------
+
 # wait for other boot messages to dissapear
 sleep 5
 
@@ -19,13 +23,24 @@ if [ "$device_""x" == "x" ]; then
     done
 fi
 
-# get full device path
+# get full device path by some magick above
 device_="/dev/""$device_"
+# get full device path by uuid
+byuuid_device_=$(readlink -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228")
+
+# compare if the result is the same
+if [ "$device_""x" != "$byuuid_device_""x" ]; then
+    # error!! block forever
+    while [ 1 == 1 ]; do
+        echo '!!DEVICE ERROR D-002 !!'
+        sleep 10
+    done
+fi
 
 sleep 2
 
 # check if its the first boot ---------
-mount -t ext4 "$device_" /mnt > /dev/null 2> /dev/null
+mount -t ext4 "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" /mnt > /dev/null 2> /dev/null
 err=$?
 # check if its the first boot ---------
 
@@ -36,7 +51,7 @@ if [ $err -eq 0 ]; then
     if [ ! -f "/mnt/__tbw_persist_part__" ]; then
         # error!! block forever
         while [ 1 == 1 ]; do
-            echo '!!DEVICE ERROR D-002 !!'
+            echo '!!DEVICE ERROR D-003 !!'
             sleep 10
         done
     fi
@@ -53,8 +68,8 @@ if [ $err -eq 0 ]; then
     echo ""
 
     # unmount and encrypt
-    umount -f "$device_" >/dev/null 2> /dev/null
-    cryptsetup -y -q luksFormat "$device_"
+    umount -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" >/dev/null 2> /dev/null
+    cryptsetup -y -q luksFormat --uuid "0e113e75-b4df-418d-98f5-da6a763c1228" "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228"
     err2=$?
     if [ $err2 -eq 0 ]; then
         echo ""
@@ -62,9 +77,9 @@ if [ $err -eq 0 ]; then
         echo "---- ENTER your password again -----"
         echo ""
 
-        cryptsetup luksOpen "$device_" tbwdb
+        cryptsetup luksOpen "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" tbwdb
         err3=$?
-        mkfs.ext4 -e panic -U "0e113e75-b4df-418d-98f5-da6a763c1228" /dev/mapper/tbwdb >/dev/null 2> /dev/null
+        mkfs.ext4 -e panic -U "039dbad8-1784-4068-9500-33a440117cde" /dev/mapper/tbwdb >/dev/null 2> /dev/null
         if [ $err3 -eq 0 ]; then
             mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
             mount -o "rw,noatime,nodiratime,sync,data=ordered" /dev/mapper/tbwdb /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
@@ -113,7 +128,7 @@ else
     echo ""
 
     # try to unlock and mount
-    cryptsetup luksOpen "$device_" tbwdb
+    cryptsetup luksOpen "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" tbwdb
     err3=$?
     if [ $err3 -eq 0 ]; then
         mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
