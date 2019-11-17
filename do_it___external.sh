@@ -412,12 +412,20 @@ cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 EOF
 
 
-echo "enable predictable network interface names"
+echo "enable predictable network interface names" # does NOT work for some reason, only the kernel boot param does
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 rm -f /etc/systemd/network/99-default.link
 ln -sf /dev/null /etc/systemd/network/99-default.link
 ls -al /etc/systemd/network/99-default.link
 EOF
+
+echo "remove unused packages to make image smaller"
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+dpkg -P --force-all cmake cpp gcc g++ libtool build-essential mc x11-common libice6 libxtst6 cron
+EOF
+
+
+# --------------------------------------------
 
 
 mkdir -p $_HOME_/LIVE_BOOT/{scratch,image/live}
@@ -485,8 +493,8 @@ cat \
 > $_HOME_/LIVE_BOOT/scratch/bios.img
 
 
-# create 240MB ext4 partition image -----------
-dd if=/dev/zero of=${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img bs=4k count=60000
+# create 25MB ext4 partition image -----------
+dd if=/dev/zero of=${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img bs=4k count=6000
 mkfs.ext4 -U "0e113e75-b4df-418d-98f5-da6a763c1228" -L tbwpersist ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img
 mkdir -p ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/
 mount -o loop ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/
