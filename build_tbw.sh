@@ -42,7 +42,7 @@ sudo chown -R pi:pi $_SRC_
 sudo chown -R pi:pi $_INST_
 
 export LD_LIBRARY_PATH=$_INST_/lib/
-export PKG_CONFIG_PATH=$_INST_/lib/pkgconfig
+export PKG_CONFIG_PATH=$_INST_/lib/pkgconfig:/usr/local/lib/pkgconfig
 
 
 cd $_SRC_
@@ -66,10 +66,9 @@ nasm -v
 
 cd $_SRC_
 # rm -Rf x264
-git clone git://git.videolan.org/x264.git
+git clone https://code.videolan.org/videolan/x264.git
 cd x264
-# https://code.videolan.org/videolan/x264/commit/72db437770fd1ce3961f624dd57a8e75ff65ae0b
-git checkout 72db437770fd1ce3961f624dd57a8e75ff65ae0b # stable
+git checkout 34c06d1c17ad968fbdda153cb772f77ee31b3095 # stable
 ./configure --prefix=$_INST_ --disable-opencl --enable-static \
 --disable-avs --disable-cli --enable-pic
 make clean
@@ -78,14 +77,37 @@ make install
 
 
 
+cd $_SRC_
+git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
+cd nv-codec-headers
+git checkout n9.1.23.0
+make -j $(nproc)
+sudo make install
+
+#ls -al /usr/local/include/ffnvcodec
+#mkdir -p $_INST_/include/ffnvcodec
+#sudo mkdir -p /usr/include/ffnvcodec
+#sudo cp -av /usr/local/include/ffnvcodec/* /usr/include/ffnvcodec/
+#cp -av /usr/local/include/ffnvcodec/* $_INST_/include/ffnvcodec/
+
+#ls -al /usr/local/lib/pkgconfig
+#mkdir -p $_INST_/lib/pkgconfig
+#sudo mkdir -p /usr/lib/pkgconfig
+#sudo cp -av /usr/local/lib/pkgconfig/* /usr/lib/pkgconfig/
+#cp -av /usr/local/lib/pkgconfig/* $_INST_/lib/pkgconfig/
+
+pkg-config --cflags ffnvcodec
+pkg-config --libs ffnvcodec
+
+
+
 # for ffmpeg --------
-export CFLAGS="$CF2 $CF3"
+export CFLAGS="$CF2 $CF3 -I/usr/local/include"
 
 cd $_SRC_
 # rm -Rf libav
-git clone https://github.com/FFmpeg/FFmpeg libav
+git clone --depth=1 --branch=n4.2.1 https://github.com/FFmpeg/FFmpeg libav
 cd libav
-git checkout n4.2.1
 ./configure --prefix=$_INST_ --disable-devices \
 --enable-pthreads \
 --disable-shared --enable-static \
@@ -98,12 +120,15 @@ git checkout n4.2.1
 --disable-libxcb-shm \
 --disable-libxcb-xfixes \
 --enable-parser=h264 \
+--enable-nvenc --enable-encoder=h264_nvenc \
+--enable-nvdec --enable-decoder=h264_cuvid \
 --enable-runtime-cpudetect \
 --enable-libx264 \
 --enable-encoder=libx264 \
---enable-gpl --enable-decoder=h264
+--enable-gpl --enable-decoder=h264 || exit 1
+
 make clean
-make -j $(nproc)
+make -j $(nproc) || exit 1
 make install
 
 unset CFLAGS
@@ -155,7 +180,7 @@ make install
 
 cd $_SRC_
 
-echo "using local build from zoff99 repo"
+echo "using build from zoff99 repo"
 git clone https://github.com/zoff99/c-toxcore
 cd c-toxcore
 git checkout "zoff99/zoxcore_local_fork"
