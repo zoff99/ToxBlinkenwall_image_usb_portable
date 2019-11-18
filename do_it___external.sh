@@ -141,6 +141,12 @@ cat /etc/apt/sources.list
 sleep 2
 # -----------------
 
+# turn off console bell globally
+echo '
+setterm -blength 0
+' >> /etc/profile
+
+
 apt-get update
 
 echo "11xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -220,6 +226,9 @@ apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" cryptsetup
 
 apt-get install -y --force-yes live-boot
 
+# ------ pulse audio for alsa ------
+apt-get install -y --force-yes pulseaudio pulseaudio-utils
+# ------ pulse audio for alsa ------
 
 # ------ more packages ------
 apt-get install -y -o "Dpkg::Options::=--force-confdef" --force-yes \
