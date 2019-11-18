@@ -134,7 +134,7 @@ sleep 2
 # -----------------
 #sed -i -e 's#main#main contrib non-free#' /etc/apt/sources.list
 echo 'deb http://ftp.debian.org/debian stretch main contrib non-free
-deb http://ftp.debian.org/debian-security/ stretch/updates main contrib non-free
+deb http://security.debian.org/debian-security/ stretch/updates main contrib non-free
 ' > /etc/apt/sources.list
 # -----------------
 cat /etc/apt/sources.list
