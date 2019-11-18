@@ -150,6 +150,8 @@ apt-cache search live-boot
 echo "33xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 apt-cache search systemd-sysv
 echo "44xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# apt-cache search firmware
+# echo "55xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 
 apt-get install -y --force-yes linux-image-amd64
@@ -182,7 +184,27 @@ apt-get install -y --force-yes --no-install-recommends htop
 apt-get install -y --force-yes --no-install-recommends nano
 apt-get install -y --force-yes --no-install-recommends vim
 apt-get install -y --force-yes firmware-linux
+# ----- more firmware -----
 apt-get install -y --force-yes firmware-linux-nonfree
+apt-get install -y --force-yes firmware-misc-nonfree
+apt-get install -y --force-yes alsa-firmware-loaders
+apt-get install -y --force-yes firmware-realtek
+apt-get install -y --force-yes firmware-amd-graphics
+apt-get install -y --force-yes atmel-firmware
+apt-get install -y --force-yes firmware-atheros
+apt-get install -y --force-yes firmware-brcm80211
+apt-get install -y --force-yes firmware-intel-sound
+apt-get install -y --force-yes firmware-intelwimax
+apt-get install -y --force-yes firmware-ipw2x00
+apt-get install -y --force-yes firmware-iwlwifi
+apt-get install -y --force-yes firmware-libertas
+apt-get install -y --force-yes firmware-myricom
+apt-get install -y --force-yes firmware-qcom-media
+apt-get install -y --force-yes firmware-ralink
+apt-get install -y --force-yes firmware-zd1211
+apt-get install -y --force-yes intel-microcode
+apt-get install -y --force-yes amd64-microcode
+# ----- more firmware -----
 
 
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" kbd keyboard-configuration
