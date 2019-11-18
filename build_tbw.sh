@@ -252,6 +252,9 @@ IS_ON=RASPI
 HD=RASPIHD
 export IS_ON
 export HD
+
+PULSE_PROP=filter.want=echo-cancel
+export PULSE_PROP
 ' >> ~/.profile
 
 
