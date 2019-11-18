@@ -441,10 +441,10 @@ ln -sf /dev/null /etc/systemd/network/99-default.link
 ls -al /etc/systemd/network/99-default.link
 EOF
 
-echo "remove unused packages to make image smaller"
-cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
-dpkg -P --force-all cmake cpp gcc g++ libtool build-essential mc x11-common libice6 libxtst6 cron
-EOF
+# echo "remove unused packages to make image smaller"
+# cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+# dpkg -P --force-all cmake cpp gcc g++ libtool build-essential mc x11-common libice6 libxtst6 cron
+# EOF
 
 
 # --------------------------------------------
