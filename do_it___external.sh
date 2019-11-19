@@ -489,9 +489,19 @@ search --set=root --file /DEBIAN_CUSTOM
 insmod all_video
 
 set default="0"
-set timeout=10
+set timeout=6
 
 menuentry "TBW Portable" {
+    linux /vmlinuz boot=live net.ifnames=0 quiet
+    initrd /initrd
+}
+
+menuentry "TBW Portable - backlight" {
+    linux /vmlinuz boot=live net.ifnames=0 acpi_backlight=vendor quiet
+    initrd /initrd
+}
+
+menuentry "TBW Portable - compat." {
     linux /vmlinuz boot=live net.ifnames=0 quiet nomodeset
     initrd /initrd
 }
