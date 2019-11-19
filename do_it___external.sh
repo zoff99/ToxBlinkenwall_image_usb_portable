@@ -120,6 +120,8 @@ export DEBIAN_FRONTEND=noninteractive
 export DEBIAN_PRIORITY=critical
 
 echo "###########################"
+touch /etc/apt/apt.conf
+cp -av /etc/apt/apt.conf /etc/apt/apt.conf_BACKUP
 cat /etc/apt/apt.conf
 echo "###########################"
 
@@ -454,6 +456,11 @@ EOF
 # cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 # dpkg -P --force-all cmake cpp gcc g++ libtool build-essential mc x11-common libice6 libxtst6 cron
 # EOF
+
+echo "reset apt options to default again"
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+mv -v /etc/apt/apt.conf_BACKUP /etc/apt/apt.conf
+EOF
 
 
 # --------------------------------------------
