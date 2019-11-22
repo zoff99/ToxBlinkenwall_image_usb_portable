@@ -214,7 +214,6 @@ apt-get install -y --force-yes intel-microcode
 apt-get install -y --force-yes amd64-microcode
 # ----- more firmware -----
 
-
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" kbd keyboard-configuration
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-setup-linux
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-setup
@@ -385,6 +384,8 @@ printf '\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 printf 'openvt -s -w /encrypt_persistent.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
+printf 'openvt -s -w /enter_screen_name.sh\n' >> /etc/rc.local
+printf '\n' >> /etc/rc.local
 printf 'set +e\n' >> /etc/rc.local
 printf 'touch /_boot_\n' >> /etc/rc.local
 printf 'systemctl disable cron\n' >> /etc/rc.local
@@ -430,6 +431,10 @@ cp -av /artefacts/encrypt_persistent.sh $_HOME_/LIVE_BOOT/chroot/encrypt_persist
 chmod a+rx $_HOME_/LIVE_BOOT/chroot/encrypt_persistent.sh
 ls -al $_HOME_/LIVE_BOOT/chroot/
 
+cp -av /artefacts/enter_screen_name.sh $_HOME_/LIVE_BOOT/chroot/enter_screen_name.sh
+chmod a+rx $_HOME_/LIVE_BOOT/chroot/enter_screen_name.sh
+ls -al $_HOME_/LIVE_BOOT/chroot/
+
 cp -av /artefacts/build_tbw.sh $_HOME_/LIVE_BOOT/chroot/home/pi/build_tbw.sh
 chmod a+rx $_HOME_/LIVE_BOOT/chroot/home/pi/build_tbw.sh
 ls -al $_HOME_/LIVE_BOOT/chroot/home/pi
@@ -444,6 +449,16 @@ cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 
 EOF
 
+echo "create debug fixup script"
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+  echo '#! /bin/bash
+setterm -cursor on
+sudo loadkeys de
+export PATH=$PATH:/sbin:/usr/sbin
+' > "/f.sh"
+
+  chmod a+rwx "/f.sh"
+EOF
 
 echo "enable predictable network interface names" # does NOT work for some reason, only the kernel boot param does
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
@@ -455,6 +470,7 @@ EOF
 # echo "remove unused packages to make image smaller"
 # cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 # dpkg -P --force-all cmake cpp gcc g++ libtool build-essential mc x11-common libice6 libxtst6 cron
+# dpkg -P --force-all git
 # EOF
 
 echo "reset apt options to default again"
@@ -492,17 +508,22 @@ set default="0"
 set timeout=6
 
 menuentry "TBW Portable" {
-    linux /vmlinuz boot=live net.ifnames=0 quiet
+    linux /vmlinuz boot=live net.ifnames=0 quiet tbw_hw=0
+    initrd /initrd
+}
+
+menuentry "TBW Portable - NVIDIA Hw Accel." {
+    linux /vmlinuz boot=live net.ifnames=0 quiet tbw_hw=1
     initrd /initrd
 }
 
 menuentry "TBW Portable - backlight" {
-    linux /vmlinuz boot=live net.ifnames=0 acpi_backlight=vendor quiet
+    linux /vmlinuz boot=live net.ifnames=0 acpi_backlight=vendor quiet tbw_hw=0
     initrd /initrd
 }
 
 menuentry "TBW Portable - compat." {
-    linux /vmlinuz boot=live net.ifnames=0 quiet nomodeset
+    linux /vmlinuz boot=live net.ifnames=0 quiet nomodeset tbw_hw=0
     initrd /initrd
 }
 EOF
