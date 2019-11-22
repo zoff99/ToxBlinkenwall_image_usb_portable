@@ -122,6 +122,8 @@ cd libav
 --enable-parser=h264 \
 --enable-nvenc --enable-encoder=h264_nvenc \
 --enable-nvdec --enable-decoder=h264_cuvid \
+--enable-protocol=file --enable-protocol=data \
+--enable-demuxer=h264 \
 --enable-runtime-cpudetect \
 --enable-libx264 \
 --enable-encoder=libx264 \
@@ -302,6 +304,8 @@ ls -al toxblinkenwall toxblinkenwall_*
 echo ""
 ls -hal toxblinkenwall toxblinkenwall_*
 
+
+cp -av toxblinkenwall_nohw toxblinkenwall
 
 cd $_HOME_
 
