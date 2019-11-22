@@ -27,18 +27,44 @@ if [[ $(cat /proc/cmdline 2>/dev/null) =~ 'tbw_hw=1' ]]; then
     echo ""
     echo ""
 
-    apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" nvidia-kernel-dmks
-    apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" nvidia-modprobe
+    # echo 0 > /sys/class/vtconsole/vtcon1/bind
+    rmmod -fv nouveau
+    # /etc/init.d/consolefont restart
+    # rmmod ttm
+    # rmmod drm_kms_helper
+    # rmmod drm
+
+    # apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" nvidia-kernel-dmks
+    # apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" nvidia-modprobe
     apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" libnvidia-encode1 
     apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" libnvcuvid1
     depmod -a
+    modprobe nvidia
     modprobe nvidia-current
     modprobe nvidia-current-drm
     modprobe nvidia-current-uvm
     modprobe nvidia-current-modeset
+    modprobe nvidia
+    modprobe nvidia-current
     echo ""
     echo ""
+
+    # test if ffmpeg h264_nvenc is working
+    echo './ffmpeg -y -f lavfi -i testsrc=duration=10:size=1280x720:rate=30 -vcodec h264_nvenc test.mkv # -v 56' > /m.sh
+    chmod a+rwx /m.sh
+
+    echo '-/ffmpeg -y -c:v h264_cuvid -i test.mkv t2.mkv' > /d.sh
+    chmod a+rwx /d.sh
+
     sleep 3
+
+    echo ""
+    echo ""
+    nvidia-smi
+    echo ""
+    echo ""
+
+    sleep 5
 fi
 
 echo ""

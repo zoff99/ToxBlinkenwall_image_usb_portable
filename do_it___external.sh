@@ -513,7 +513,7 @@ menuentry "TBW Portable" {
 }
 
 menuentry "TBW Portable - NVIDIA Hw Accel." {
-    linux /vmlinuz boot=live net.ifnames=0 quiet tbw_hw=1
+    linux /vmlinuz boot=live net.ifnames=0 quiet modprobe.blacklist=nouveau rd.driver.blacklist=nouveau tbw_hw=1
     initrd /initrd
 }
 

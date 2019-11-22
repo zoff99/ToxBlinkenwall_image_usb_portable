@@ -80,7 +80,7 @@ make install
 cd $_SRC_
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
 cd nv-codec-headers
-git checkout n9.1.23.0
+git checkout n8.1.24.10 # n9.1.23.0
 make -j $(nproc)
 sudo make install
 
@@ -112,7 +112,7 @@ cd libav
 --enable-pthreads \
 --disable-shared --enable-static \
 --disable-doc --disable-avdevice \
---disable-swscale \
+\
 --disable-network \
 --enable-ffmpeg --enable-ffprobe \
 --disable-network --disable-everything \
@@ -124,10 +124,18 @@ cd libav
 --enable-nvdec --enable-decoder=h264_cuvid \
 --enable-protocol=file --enable-protocol=data \
 --enable-demuxer=h264 \
+--enable-indev=lavfi --enable-filter=testsrc \
+--enable-filter=scale \
+--enable-muxer=h264 --enable-muxer=matroska \
 --enable-runtime-cpudetect \
 --enable-libx264 \
 --enable-encoder=libx264 \
+--enable-decoder=rawvideo \
+--enable-hwaccel=h264_nvdec --enable-hwaccel=h264_vaapi --enable-hwaccel=h264_vdpau \
 --enable-gpl --enable-decoder=h264 || exit 1
+
+# --disable-swscale \
+# ./ffmpeg -y -f lavfi -i testsrc=duration=10:size=1280x720:rate=30 -vcodec h264_nvenc test.mkv -v 56
 
 make clean
 make -j $(nproc) || exit 1
