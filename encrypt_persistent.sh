@@ -4,8 +4,46 @@
 trap '' INT
 # ignore CTRL-C press in this script ---------
 
+sudo dmesg -D 2> /dev/null
+
 # wait for other boot messages to dissapear
 sleep 5
+
+echo ""
+echo ""
+echo ""
+echo ""
+
+echo "==========================================================="
+echo "kernel command line:"
+cat /proc/cmdline
+echo "==========================================================="
+
+if [[ $(cat /proc/cmdline 2>/dev/null) =~ 'tbw_hw=1' ]]; then
+    cp -av /home/pi/ToxBlinkenwall/toxblinkenwall/toxblinkenwall_hw_nvidia /home/pi/ToxBlinkenwall/toxblinkenwall/toxblinkenwall
+    echo ""
+    echo ""
+    echo "--- using NVIDIA HW ACCEL ---"
+    echo ""
+    echo ""
+
+    apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" nvidia-kernel-dmks
+    apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" nvidia-modprobe
+    apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" libnvidia-encode1 
+    apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" libnvcuvid1
+    depmod -a
+    modprobe nvidia-current
+    modprobe nvidia-current-drm
+    modprobe nvidia-current-uvm
+    modprobe nvidia-current-modeset
+    echo ""
+    echo ""
+    sleep 3
+fi
+
+echo ""
+echo ""
+echo ""
 
 # find correct device name
 # and change to partition number 3 on the boot device
@@ -93,7 +131,7 @@ if [ $err -eq 0 ]; then
                 echo "         ++ LUKS init OK ++"
                 echo ""
                 echo ""
-                sleep 3
+                sleep 5
             else
                 # error!! block forever
                 while [ 1 == 1 ]; do
@@ -142,7 +180,7 @@ else
             echo "         ## LUKS open OK ##"
             echo ""
             echo ""
-            sleep 3
+            sleep 5
         else
             # error!! block forever
             while [ 1 == 1 ]; do
@@ -158,3 +196,5 @@ else
         done
     fi
 fi
+
+sudo dmesg -E 2> /dev/null
