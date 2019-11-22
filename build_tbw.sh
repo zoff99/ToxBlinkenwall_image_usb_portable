@@ -111,11 +111,11 @@ cd libav
 ./configure --prefix=$_INST_ --disable-devices \
 --enable-pthreads \
 --disable-shared --enable-static \
---disable-doc --disable-avdevice \
+--disable-doc \
 --disable-swscale \
 --disable-network \
 --enable-ffmpeg --enable-ffprobe \
---disable-network --disable-everything \
+--disable-network \
 --disable-bzlib \
 --disable-libxcb-shm \
 --disable-libxcb-xfixes \
@@ -127,12 +127,14 @@ cd libav
 --enable-encoder=libx264 \
 --enable-gpl --enable-decoder=h264 || exit 1
 
+# --disable-avdevice \
+# --disable-everything \
+
 make clean
 make -j $(nproc) || exit 1
 make install
 
 unset CFLAGS
-
 
 cd $_SRC_
 git clone --depth=1 --branch=1.0.18 https://github.com/jedisct1/libsodium.git
@@ -177,6 +179,8 @@ export CXXFLAGS=" $CF2 $CF3 "
 make -j $(nproc)
 make install
 
+
+## --------- build without HW Accceleration ---------
 
 cd $_SRC_
 
@@ -223,7 +227,7 @@ $_INST_/lib/libavutil.a \
 $_INST_/lib/libsodium.a \
 -lasound \
 -lpthread -lv4lconvert \
--ldl
+-ldl || exit 1
 
 res2=$?
 
@@ -231,15 +235,86 @@ ldd toxblinkenwall
 ls -hal toxblinkenwall
 file toxblinkenwall
 
+cp -av toxblinkenwall toxblinkenwall_nohw
+
+## --------- build without HW Accceleration ---------
+
+
+
+## --------- build with nvidia HW Accceleration -----
+
+cd $_SRC_
+
+echo "using build from zoff99 repo"
+git clone https://github.com/zoff99/c-toxcore
+cd c-toxcore
+git checkout "zoff99/zoxcore_local_fork"
+
+./autogen.sh
+make clean
+export CFLAGS=" -DHW_CODEC_CONFIG_TBW_LINNVENC $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
+                --param=ssp-buffer-size=1 -ggdb3 -fstack-protector-all "
+export LDFLAGS=-L$_INST_/lib
+
+./configure \
+--prefix=$_INST_ \
+--disable-soname-versions --disable-testing --disable-shared
+make -j $(nproc) || exit 1
+make install
+
+
+cd $_HOME_/ToxBlinkenwall/toxblinkenwall/
+
+cat toxblinkenwall.c | grep 'define HAVE_OUTPUT_OMX'
+sed -i -e 'sx#define HAVE_OUTPUT_OMXx#define HAVE_FRAMEBUFFERx' toxblinkenwall.c
+cat toxblinkenwall.c | grep 'define HAVE_FRAMEBUFFER'
+
+gcc \
+$CF2 $CF3 \
+-fstack-protector-all \
+-Wno-unused-variable \
+-fPIC -export-dynamic -I$_INST_/include -o toxblinkenwall -lm \
+toxblinkenwall.c rb.c \
+-std=gnu99 \
+-L$_INST_/lib \
+$_INST_/lib/libtoxcore.a \
+$_INST_/lib/libtoxav.a \
+-lrt \
+$_INST_/lib/libopus.a \
+$_INST_/lib/libvpx.a \
+$_INST_/lib/libx264.a \
+$_INST_/lib/libavcodec.a \
+$_INST_/lib/libavutil.a \
+$_INST_/lib/libsodium.a \
+-lasound \
+-lpthread -lv4lconvert \
+-ldl || exit 1
+
+res2=$?
+
+ldd toxblinkenwall
+ls -hal toxblinkenwall
+file toxblinkenwall
+
+cp -av toxblinkenwall toxblinkenwall_hw_nvidia
+
+## --------- build with nvidia HW Accceleration -----
+
+
+ls -al toxblinkenwall toxblinkenwall_*
+echo ""
+ls -hal toxblinkenwall toxblinkenwall_*
+
+
 cd $_HOME_
 
 
 if [ $res2 -eq 0 ]; then
  echo "compile: OK"
 
- echo "clean up of compile files ..."
- rm -Rf $_SRC_
- rm -Rf $_INST_
+ # echo "clean up of compile files ..."
+ # rm -Rf $_SRC_
+ # rm -Rf $_INST_
  echo "... ready"
 
 else
