@@ -22,6 +22,9 @@ chmod a+x ./artefacts/build_tbw.sh
 cp -av encrypt_persistent.sh ./artefacts/encrypt_persistent.sh
 chmod a+x ./artefacts/encrypt_persistent.sh
 
+cp -av enter_screen_name.sh ./artefacts/enter_screen_name.sh
+chmod a+x ./artefacts/enter_screen_name.sh
+
 vagrant destroy -f
 vagrant up
 

@@ -39,6 +39,8 @@ jobs:
       - run: sudo chmod a+rx /artefacts/build_tbw.sh
       - run: sudo cp -av encrypt_persistent.sh /artefacts/encrypt_persistent.sh
       - run: sudo chmod a+rx /artefacts/encrypt_persistent.sh
+      - run: sudo cp -av enter_screen_name.sh /artefacts/enter_screen_name.sh
+      - run: sudo chmod a+rx /artefacts/enter_screen_name.sh
 
       - run: sudo /artefacts/runme.sh
       - run: mkdir -p deploy2/
