@@ -111,11 +111,11 @@ cd libav
 ./configure --prefix=$_INST_ --disable-devices \
 --enable-pthreads \
 --disable-shared --enable-static \
---disable-doc \
+--disable-doc --disable-avdevice \
 --disable-swscale \
 --disable-network \
 --enable-ffmpeg --enable-ffprobe \
---disable-network \
+--disable-network --disable-everything \
 --disable-bzlib \
 --disable-libxcb-shm \
 --disable-libxcb-xfixes \
@@ -126,9 +126,6 @@ cd libav
 --enable-libx264 \
 --enable-encoder=libx264 \
 --enable-gpl --enable-decoder=h264 || exit 1
-
-# --disable-avdevice \
-# --disable-everything \
 
 make clean
 make -j $(nproc) || exit 1
