@@ -19,6 +19,9 @@ echo "kernel command line:"
 cat /proc/cmdline
 echo "==========================================================="
 
+echo 'v4l2-ctl -d /dev/video0 --set-parm=30 --set-fmt-video=width=640,height=480,pixelformat="Y16 " --stream-mmap --stream-count=240 --stream-to=video.raw' > /v.sh
+chmod a+rwx /v.sh
+
 if [[ $(cat /proc/cmdline 2>/dev/null) =~ 'tbw_hw=1' ]]; then
     cp -av /home/pi/ToxBlinkenwall/toxblinkenwall/toxblinkenwall_hw_nvidia /home/pi/ToxBlinkenwall/toxblinkenwall/toxblinkenwall
     echo ""
