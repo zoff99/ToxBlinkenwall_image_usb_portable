@@ -177,6 +177,8 @@ apt-get install -y --force-yes --no-install-recommends curl
 apt-get install -y --force-yes --no-install-recommends openssh-client
 apt-get install -y --force-yes --no-install-recommends blackbox
 apt-get install -y --force-yes --no-install-recommends nano
+apt-get install -y --force-yes ifupdown
+apt-get install -y --force-yes isc-dhcp-client
 apt-get install -y --force-yes alsa-utils
 apt-get install -y --force-yes libasound-dev
 apt-get install -y --force-yes v4l-utils
