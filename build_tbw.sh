@@ -215,6 +215,11 @@ cat toxblinkenwall.c | grep 'define HAVE_OUTPUT_OMX'
 sed -i -e 'sx#define HAVE_OUTPUT_OMXx#define HAVE_FRAMEBUFFERx' toxblinkenwall.c
 cat toxblinkenwall.c | grep 'define HAVE_FRAMEBUFFER'
 
+# set 640x480 camera resolution to get better fps
+cat toxblinkenwall.c | grep 'int video_high ='
+sed -i -e 's#int video_high = 1;#int video_high = 0;#' toxblinkenwall.c
+cat toxblinkenwall.c | grep 'int video_high ='
+
 gcc \
 $CF2 $CF3 \
 -fstack-protector-all \
@@ -275,6 +280,11 @@ cd $_HOME_/ToxBlinkenwall/toxblinkenwall/
 cat toxblinkenwall.c | grep 'define HAVE_OUTPUT_OMX'
 sed -i -e 'sx#define HAVE_OUTPUT_OMXx#define HAVE_FRAMEBUFFERx' toxblinkenwall.c
 cat toxblinkenwall.c | grep 'define HAVE_FRAMEBUFFER'
+
+# set 640x480 camera resolution to get better fps
+cat toxblinkenwall.c | grep 'int video_high ='
+sed -i -e 's#int video_high = 1;#int video_high = 0;#' toxblinkenwall.c
+cat toxblinkenwall.c | grep 'int video_high ='
 
 gcc \
 $CF2 $CF3 \
