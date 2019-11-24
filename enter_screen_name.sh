@@ -185,20 +185,20 @@ if [ $name_set -eq 1 ]; then
                 echo ""
                 echo "Connecting to WIFI ""$wifi_ssid"" ..."
 
-                nmcli radio wifi off > /dev/null 2>&1
-                systemctl stop NetworkManager > /dev/null 2>&1
+                # nmcli radio wifi off > /dev/null 2>&1
+                # systemctl stop NetworkManager > /dev/null 2>&1
 
                 echo "$wifi_ssid" > /tmp/wlan_ssid.txt
                 echo "$wifi_pass" > /tmp/wlan_pass.txt
                 echo ""           > /tmp/wlan_public.txt
                 set_wlan_values > /dev/null 2>&1
 
-                systemctl restart NetworkManager > /dev/null 2>&1
-                nmcli radio wifi on > /dev/null 2>&1
-                timeout -k 15 14 ifdown wlan0 < /dev/null > /dev/null 2>&1
+                # systemctl restart NetworkManager > /dev/null 2>&1
+                # nmcli radio wifi on > /dev/null 2>&1
+                timeout -k 16 14 ifdown wlan0 < /dev/null
                 sleep 1
                 echo ""
-                timeout -k 15 14 ifup wlan0 < /dev/null > /dev/null 2>&1
+                timeout -k 16 14 ifup wlan0 < /dev/null
                 echo ""
                 echo ""
                 sleep 5
