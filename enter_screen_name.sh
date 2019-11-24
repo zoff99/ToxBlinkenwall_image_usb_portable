@@ -7,8 +7,6 @@ trap '' INT
 dmesg -D 2> /dev/null
 
 
-
-
 function set_wlan_values
 {
     export mount_dir="/tmp/"
@@ -167,6 +165,12 @@ done
 
 echo ""
 
+# connect to any open WIFI in any case
+echo "x_dummy_x" > /tmp/wlan_ssid.txt
+echo "z_dummy_z" > /tmp/wlan_pass.txt
+echo ""          > /tmp/wlan_public.txt
+set_wlan_values  > /dev/null 2>&1
+
 if [ $name_set -eq 1 ]; then
     if [ "$what""x" == "0x" ]; then
         if [ "$screen_name""x" != "x" ]; then
@@ -191,16 +195,8 @@ if [ $name_set -eq 1 ]; then
                 echo "$wifi_ssid" > /tmp/wlan_ssid.txt
                 echo "$wifi_pass" > /tmp/wlan_pass.txt
                 echo ""           > /tmp/wlan_public.txt
-                set_wlan_values > /dev/null 2>&1
+                set_wlan_values   > /dev/null 2>&1
 
-                # systemctl restart NetworkManager > /dev/null 2>&1
-                # nmcli radio wifi on > /dev/null 2>&1
-                timeout -k 16 14 ifdown wlan0 < /dev/null
-                sleep 1
-                echo ""
-                timeout -k 16 14 ifup wlan0 < /dev/null
-                echo ""
-                echo ""
                 sleep 5
             fi
         fi

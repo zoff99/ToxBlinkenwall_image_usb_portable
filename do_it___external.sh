@@ -388,6 +388,11 @@ printf 'openvt -s -w /encrypt_persistent.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 printf 'openvt -s -w /enter_screen_name.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
+printf 'systemctl restart NetworkManager\n' >> /etc/rc.local
+printf 'nmcli radio wifi on\n' >> /etc/rc.local
+printf 'pkill -f wpa_supplicant\n' >> /etc/rc.local
+printf 'timeout -k 6 4 ifdown wlan0\n' >> /etc/rc.local
+printf 'timeout -k 20 17 ifup wlan0\n' >> /etc/rc.local
 printf 'set +e\n' >> /etc/rc.local
 printf 'touch /_boot_\n' >> /etc/rc.local
 printf 'systemctl disable cron\n' >> /etc/rc.local
