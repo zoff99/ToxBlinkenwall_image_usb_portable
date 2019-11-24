@@ -52,7 +52,7 @@ cd nasm
 git checkout nasm-2.13.03
 ./autogen.sh
 ./configure --prefix=$_INST_
-make -j $(nproc)
+make -j $(nproc) || exit 1
 # # seems man pages are not always built. but who needs those
 touch nasm.1
 touch ndisasm.1
@@ -72,7 +72,7 @@ git checkout 34c06d1c17ad968fbdda153cb772f77ee31b3095 # stable
 ./configure --prefix=$_INST_ --disable-opencl --enable-static \
 --disable-avs --disable-cli --enable-pic
 make clean
-make -j $(nproc)
+make -j $(nproc) || exit 1
 make install
 
 
@@ -81,7 +81,7 @@ cd $_SRC_
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
 cd nv-codec-headers
 git checkout n8.1.24.10 # n9.1.23.0
-make -j $(nproc)
+make -j $(nproc) || exit 1
 sudo make install
 
 #ls -al /usr/local/include/ffnvcodec
@@ -150,7 +150,7 @@ cd libsodium
 export CFLAGS=" $CF2 $CF3 "
 export CXXFLAGS=" $CF2 $CF3 "
 ./configure --prefix=$_INST_ --disable-shared --disable-soname-versions
-make -j $(nproc)
+make -j $(nproc) || exit 1
 make install
 
 cd $_SRC_
@@ -173,7 +173,7 @@ export CXXFLAGS=" $CF2 $CF3 "
 
 #  --enable-better-hw-compatibility \
 
-make -j $(nproc)
+make -j $(nproc) || exit 1
 make install
 
 cd $_SRC_
@@ -183,7 +183,7 @@ cd opus
 export CFLAGS=" $CF2 $CF3 "
 export CXXFLAGS=" $CF2 $CF3 "
 ./configure --prefix=$_INST_ --disable-shared
-make -j $(nproc)
+make -j $(nproc) || exit 1
 make install
 
 
