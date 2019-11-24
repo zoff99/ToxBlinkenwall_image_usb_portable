@@ -4,7 +4,7 @@
 trap '' INT
 # ignore CTRL-C press in this script ---------
 
-sudo dmesg -D 2> /dev/null
+dmesg -D 2> /dev/null
 
 # wait for other boot messages to dissapear
 sleep 5
@@ -226,4 +226,4 @@ else
     fi
 fi
 
-sudo dmesg -E 2> /dev/null
+dmesg -E 2> /dev/null
