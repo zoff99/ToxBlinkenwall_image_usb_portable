@@ -443,13 +443,29 @@ ls -al $_HOME_/LIVE_BOOT/chroot/home/pi
 
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
   id -a
+  res=0
   mkdir -p "/home/pi/inst/"
   chmod a+rwx "/home/pi/inst/"
   chown pi:pi -R "/home/pi/inst/"
   echo "build tbw ..."
-  su - pi bash -c "/home/pi/build_tbw.sh"
-
+  su - pi bash -c "/home/pi/build_tbw.sh || touch /home/pi/ERROR"
+  if [ -e /home/pi/ERROR ]; then
+    exit 1
+  fi
 EOF
+
+res11=$?
+if [ $res11 -ne 0 ]; then
+    echo ""
+    echo ""
+    echo "******* ERROR building tbw *******"
+    echo "******* ERROR building tbw *******"
+    echo "******* ERROR building tbw *******"
+    echo "******* ERROR building tbw *******"
+    echo ""
+    echo ""
+    exit 1
+fi
 
 echo "create debug fixup script"
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
