@@ -195,9 +195,10 @@ if [ $name_set -eq 1 ]; then
 
                 systemctl restart NetworkManager
                 nmcli radio wifi on
+                timeout -k 15 14 ifdown wlan0
                 sleep 1
                 echo ""
-                ifup wlan0
+                timeout -k 15 14 ifup wlan0
                 echo ""
                 echo ""
                 sleep 5
