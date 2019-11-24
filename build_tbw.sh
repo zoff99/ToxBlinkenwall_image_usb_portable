@@ -152,8 +152,8 @@ export CXXFLAGS=" $CF2 $CF3 "
 ./configure --prefix=$_INST_ --disable-shared --disable-soname-versions
 res=$?
 if [ $res -ne 0 ]; then
-    "retrying to compile libsodium"
-    sleep 3
+    echo "retrying to compile libsodium"
+    sleep 32
     ./autogen.sh
     ./configure --prefix=$_INST_ --disable-shared --disable-soname-versions || exit 1
 fi
