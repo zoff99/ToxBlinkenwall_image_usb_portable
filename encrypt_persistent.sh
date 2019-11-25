@@ -226,4 +226,7 @@ else
     fi
 fi
 
+# copy phone book entries from persistent storage to actual usage dir
+cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/
+
 dmesg -E 2> /dev/null
