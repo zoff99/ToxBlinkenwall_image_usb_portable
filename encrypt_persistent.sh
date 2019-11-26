@@ -103,14 +103,14 @@ non_persistent=0
 # compare if the result is the same
 if [ "$device_""x" != "$byuuid_device_""x" ]; then
     # error!! block forever
-    while [ 1 == 1 ]; do
+    # while [ 1 == 1 ]; do
         echo '!!DEVICE ERROR D-002 !!'
         echo '** using non-persistent mode **'
         sleep 10
         non_persistent=1
         chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
         chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-    done
+    # done
 fi
 
 
