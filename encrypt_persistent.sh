@@ -92,27 +92,37 @@ fi
 
 # get full device path by some magick above
 device_="/dev/""$device_"
+
 # get full device path by uuid
 byuuid_device_=$(readlink -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228")
 
-echo "found UUID device: ""$byuuid_device_"
-echo ""
-
 non_persistent=0
 
-# compare if the result is the same
-if [ "$device_""x" != "$byuuid_device_""x" ]; then
-    # error!! block forever
-    # while [ 1 == 1 ]; do
-        echo '!!DEVICE ERROR D-002 !!'
-        echo '** using non-persistent mode **'
-        sleep 10
-        non_persistent=1
-        chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-        chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-    # done
-fi
+if [ ! -e "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" ]; then
+    echo "UUID device NOT found"
+    echo '!!DEVICE ERROR D-004 !!'
+    echo '** using non-persistent mode **'
+    sleep 10
+    non_persistent=1
+    chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+    chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+else
+    echo "found UUID device: ""$byuuid_device_"
+    echo ""
 
+    # compare if the result is the same
+    if [ "$device_""x" != "$byuuid_device_""x" ]; then
+        # error!! block forever
+        # while [ 1 == 1 ]; do
+            echo '!!DEVICE ERROR D-002 !!'
+            echo '** using non-persistent mode **'
+            sleep 10
+            non_persistent=1
+            chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+            chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+        # done
+    fi
+fi
 
 if [ $non_persistent == 0 ]; then
 
