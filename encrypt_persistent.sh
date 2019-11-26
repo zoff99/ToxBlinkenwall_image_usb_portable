@@ -95,6 +95,9 @@ device_="/dev/""$device_"
 # get full device path by uuid
 byuuid_device_=$(readlink -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228")
 
+echo "found UUID device: ""$byuuid_device_"
+echo ""
+
 # compare if the result is the same
 if [ "$device_""x" != "$byuuid_device_""x" ]; then
     # error!! block forever
