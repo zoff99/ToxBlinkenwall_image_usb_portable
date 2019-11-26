@@ -98,7 +98,7 @@ byuuid_device_=$(readlink -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c
 echo "found UUID device: ""$byuuid_device_"
 echo ""
 
-non-persistent=0
+non_persistent=0
 
 # compare if the result is the same
 if [ "$device_""x" != "$byuuid_device_""x" ]; then
@@ -107,14 +107,14 @@ if [ "$device_""x" != "$byuuid_device_""x" ]; then
         echo '!!DEVICE ERROR D-002 !!'
         echo '** using non-persistent mode **'
         sleep 10
-        non-persistent=1
+        non_persistent=1
         chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
         chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
     done
 fi
 
 
-if [ "$non-persistent""x" == "0x" ]; then
+if [ $non_persistent == 0 ]; then
 
     sleep 2
 
@@ -243,5 +243,6 @@ if [ "$non-persistent""x" == "0x" ]; then
 
 
 fi
+
 
 dmesg -E 2> /dev/null
