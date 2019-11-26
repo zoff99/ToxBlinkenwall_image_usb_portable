@@ -98,58 +98,117 @@ byuuid_device_=$(readlink -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c
 echo "found UUID device: ""$byuuid_device_"
 echo ""
 
+non-persistent=0
+
 # compare if the result is the same
 if [ "$device_""x" != "$byuuid_device_""x" ]; then
     # error!! block forever
     while [ 1 == 1 ]; do
         echo '!!DEVICE ERROR D-002 !!'
+        echo '** using non-persistent mode **'
         sleep 10
+        non-persistent=1
+        chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+        chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
     done
 fi
 
-sleep 2
 
-# check if its the first boot ---------
-mount -t ext4 "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" /mnt > /dev/null 2> /dev/null
-err=$?
-# check if its the first boot ---------
+if [ "$non-persistent""x" == "0x" ]; then
 
-if [ $err -eq 0 ]; then
+    sleep 2
 
-    # check if its really really the correct filesystem/partition
-    # since we are going to fully overwrite it
-    if [ ! -f "/mnt/__tbw_persist_part__" ]; then
-        # error!! block forever
-        while [ 1 == 1 ]; do
-            echo '!!DEVICE ERROR D-003 !!'
-            sleep 10
-        done
-    fi
+    # check if its the first boot ---------
+    mount -t ext4 "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" /mnt > /dev/null 2> /dev/null
+    err=$?
+    # check if its the first boot ---------
 
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo ""
-    echo "------- SETUP data encryption -------"
-    echo "------- pick a strong password ------"
-    echo ""
+    if [ $err -eq 0 ]; then
 
-    # unmount and encrypt
-    umount -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" >/dev/null 2> /dev/null
-    cryptsetup -y -q luksFormat --uuid "0e113e75-b4df-418d-98f5-da6a763c1228" "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228"
-    err2=$?
-    if [ $err2 -eq 0 ]; then
+        # check if its really really the correct filesystem/partition
+        # since we are going to fully overwrite it
+        if [ ! -f "/mnt/__tbw_persist_part__" ]; then
+            # error!! block forever
+            while [ 1 == 1 ]; do
+                echo '!!DEVICE ERROR D-003 !!'
+                sleep 10
+            done
+        fi
+
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
+        echo ""
+        echo "------- SETUP data encryption -------"
+        echo "------- pick a strong password ------"
+        echo ""
+
+        # unmount and encrypt
+        umount -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" >/dev/null 2> /dev/null
+        cryptsetup -y -q luksFormat --uuid "0e113e75-b4df-418d-98f5-da6a763c1228" "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228"
+        err2=$?
+        if [ $err2 -eq 0 ]; then
+            echo ""
+            echo "------ UNLOCK data encryption ------"
+            echo "---- ENTER your password again -----"
+            echo ""
+
+            cryptsetup luksOpen "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" tbwdb
+            err3=$?
+            mkfs.ext4 -e panic -U "039dbad8-1784-4068-9500-33a440117cde" /dev/mapper/tbwdb >/dev/null 2> /dev/null
+            if [ $err3 -eq 0 ]; then
+                mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
+                mount -o "rw,noatime,nodiratime,sync,data=ordered" /dev/mapper/tbwdb /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
+                err4=$?
+                if [ $err4 -eq 0 ]; then
+                    chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+                    chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+
+                    echo ""
+                    echo ""
+                    echo "         ++ LUKS init OK ++"
+                    echo ""
+                    echo ""
+                    sleep 5
+                else
+                    # error!! block forever
+                    while [ 1 == 1 ]; do
+                        echo '!!LUKS ERROR 003 !!'
+                        sleep 10
+                    done
+                fi
+            else
+                # error!! block forever
+                while [ 1 == 1 ]; do
+                    echo '!!LUKS ERROR 002 !!'
+                    sleep 10
+                done
+            fi
+        else
+            # error!! block forever
+            while [ 1 == 1 ]; do
+                echo '!!LUKS ERROR 001 !!'
+                sleep 10
+            done
+        fi
+    else
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
+        echo "####################################"
         echo ""
         echo "------ UNLOCK data encryption ------"
-        echo "---- ENTER your password again -----"
+        echo "------- ENTER your password --------"
         echo ""
 
+        # try to unlock and mount
         cryptsetup luksOpen "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" tbwdb
         err3=$?
-        mkfs.ext4 -e panic -U "039dbad8-1784-4068-9500-33a440117cde" /dev/mapper/tbwdb >/dev/null 2> /dev/null
         if [ $err3 -eq 0 ]; then
             mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
             mount -o "rw,noatime,nodiratime,sync,data=ordered" /dev/mapper/tbwdb /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
@@ -157,79 +216,32 @@ if [ $err -eq 0 ]; then
             if [ $err4 -eq 0 ]; then
                 chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
                 chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-
                 echo ""
                 echo ""
-                echo "         ++ LUKS init OK ++"
+                echo "         ## LUKS open OK ##"
                 echo ""
                 echo ""
                 sleep 5
             else
                 # error!! block forever
                 while [ 1 == 1 ]; do
-                    echo '!!LUKS ERROR 003 !!'
+                    echo '!!LUKS ERROR 005 !!'
                     sleep 10
                 done
             fi
         else
             # error!! block forever
             while [ 1 == 1 ]; do
-                echo '!!LUKS ERROR 002 !!'
+                echo '!!LUKS ERROR 004 !!'
                 sleep 10
             done
         fi
-    else
-        # error!! block forever
-        while [ 1 == 1 ]; do
-            echo '!!LUKS ERROR 001 !!'
-            sleep 10
-        done
     fi
-else
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo "####################################"
-    echo ""
-    echo "------ UNLOCK data encryption ------"
-    echo "------- ENTER your password --------"
-    echo ""
 
-    # try to unlock and mount
-    cryptsetup luksOpen "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" tbwdb
-    err3=$?
-    if [ $err3 -eq 0 ]; then
-        mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
-        mount -o "rw,noatime,nodiratime,sync,data=ordered" /dev/mapper/tbwdb /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
-        err4=$?
-        if [ $err4 -eq 0 ]; then
-            chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-            chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-            echo ""
-            echo ""
-            echo "         ## LUKS open OK ##"
-            echo ""
-            echo ""
-            sleep 5
-        else
-            # error!! block forever
-            while [ 1 == 1 ]; do
-                echo '!!LUKS ERROR 005 !!'
-                sleep 10
-            done
-        fi
-    else
-        # error!! block forever
-        while [ 1 == 1 ]; do
-            echo '!!LUKS ERROR 004 !!'
-            sleep 10
-        done
-    fi
+    # copy phone book entries from persistent storage to actual usage dir
+    cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/
+
+
 fi
-
-# copy phone book entries from persistent storage to actual usage dir
-cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/
 
 dmesg -E 2> /dev/null
