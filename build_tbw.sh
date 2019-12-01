@@ -362,6 +362,9 @@ export HD
 
 PULSE_PROP=filter.want=echo-cancel
 export PULSE_PROP
+
+TBW_KILLSWITCH_ENGAGE=1
+export TBW_KILLSWITCH_ENGAGE
 ' >> ~/.profile
 
 
