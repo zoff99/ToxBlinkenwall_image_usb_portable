@@ -255,7 +255,6 @@ bc htop speedometer \
 ntp ntpstat \
 python-setuptools \
 python3-setuptools \
-python3-distutils \
 python-pip \
 python3-pip \
 dnsutils \
