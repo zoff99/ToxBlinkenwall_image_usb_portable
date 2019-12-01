@@ -388,6 +388,7 @@ printf 'openvt -s -w /encrypt_persistent.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 printf 'openvt -s -w /enter_screen_name.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
+printf 'systemctl stop "getty@tty1.service"\n' >> /etc/rc.local
 printf 'echo "" > "/home/pi/ToxBlinkenwall/toxblinkenwall/ext_keys_scripts/ext_keys.py"\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 ### printf 'cat /etc/network/interfaces\n' >> /etc/rc.local
