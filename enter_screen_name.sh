@@ -7,6 +7,22 @@ trap '' INT
 dmesg -D 2> /dev/null
 
 
+# tell network manager to NOT manage these network interfaces!!
+mkdir -p /etc/network 2> /dev/null
+
+echo '
+auto lo
+iface lo inet loopback
+
+# allow-hotplug eth0
+# iface eth0 inet dhcp
+
+auto wlan0
+iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+' > /etc/network/interfaces 2> /dev/null
+
 function set_wlan_values
 {
     export mount_dir="/tmp/"
@@ -19,7 +35,6 @@ function set_wlan_values
         ########-------------------------------------
 
         wpa_conf_file_location="/etc/wpa_supplicant/wpa_supplicant.conf"
-        interfaces_file_location="/etc/network/interfaces"
         wpa_conf_file_mode="600"
         wpa_conf_file_content_001='country=@NETCOUNTRY@
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -51,17 +66,6 @@ network={
 '
 
         ########-------------------------------------
-
-        echo '
-auto lo
-iface lo inet loopback
-
-auto wlan0
-iface wlan0 inet dhcp
-    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-
-' > "$interfaces_file_location"
-
 
         rm -f "/tmp/abc.txt"
 
@@ -98,9 +102,6 @@ iface wlan0 inet dhcp
         mv -v "/tmp/abc.txt" "$wpa_conf_file_location"
         rm -f "/tmp/abc.txt" # just to be safe
 
-        # wpa_action wlan0 reload
-        # systemctl restart ifup@wlan0.service
-
     fi
 
     return 0
@@ -121,6 +122,7 @@ echo "####################################"
 echo ""
 echo ' press "A" to enter your screename'
 echo ' press "N" to setup WIFI'
+echo ' press "F" to setup Public Free WIFI'
 echo "        or wait 3 seconds"
 echo ""
 
@@ -128,7 +130,7 @@ screen_name=''
 name_set=0
 what=0
 
-echo -n 'press "A" or "N" ';
+echo -n 'press "A" or "N" or "F" ';
 for _ in {1..3}; do
     read -rs -n1 -t1 name1 > /dev/null 2>&1
     ret=$?
@@ -143,15 +145,27 @@ for _ in {1..3}; do
             echo ""
             echo " WIFI Networks in the area:"
             echo ""
-
             nmcli device wifi list
-
             echo ""
             echo ""
             sleep 2
 
             read -p 'WIFI SSID : ' -t60 -r -e wifi_ssid
             read -p 'WIFI PASS : ' -t60 -r -e wifi_pass
+            name_set=1
+            what=1
+            break
+        elif [ "$name1""x" == "fx" ]; then
+            echo ""
+            echo " WIFI Networks in the area:"
+            echo ""
+            nmcli device wifi list
+            echo ""
+            echo ""
+            sleep 2
+
+            wifi_ssid="_PUBLIC_FREE_"
+            wifi_pass="xxyy12_PUBLIC_FREE_213213123"
             name_set=1
             what=1
             break
@@ -165,12 +179,10 @@ done
 
 echo ""
 
-# connect to any open WIFI in any case
-echo "x_dummy_x" > /tmp/wlan_ssid.txt
-echo "z_dummy_z" > /tmp/wlan_pass.txt
-echo ""          > /tmp/wlan_public.txt
-set_wlan_values  > /dev/null 2>&1
+# restore toxname from persistent storage
+cp -av /home/pi/ToxBlinkenwall/toxblinkenwall/db/toxname.txt /home/pi/ToxBlinkenwall/toxblinkenwall/toxname.txt > /dev/null 2> /dev/null
 
+# set values from user input
 if [ $name_set -eq 1 ]; then
     if [ "$what""x" == "0x" ]; then
         if [ "$screen_name""x" != "x" ]; then
@@ -188,9 +200,6 @@ if [ $name_set -eq 1 ]; then
                 echo ""
                 echo ""
                 echo "Connecting to WIFI ""$wifi_ssid"" ..."
-
-                # nmcli radio wifi off > /dev/null 2>&1
-                # systemctl stop NetworkManager > /dev/null 2>&1
 
                 echo "$wifi_ssid" > /tmp/wlan_ssid.txt
                 echo "$wifi_pass" > /tmp/wlan_pass.txt

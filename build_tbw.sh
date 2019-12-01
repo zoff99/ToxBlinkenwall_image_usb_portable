@@ -147,13 +147,19 @@ cd $_SRC_
 git clone --depth=1 --branch=1.0.18 https://github.com/jedisct1/libsodium.git
 cd libsodium
 ./autogen.sh
+res1=$?
+if [ $res1 -ne 0 ]; then
+    echo "retrying to autoconf libsodium"
+    sleep 61
+    ./autogen.sh || exit 1
+fi
 export CFLAGS=" $CF2 $CF3 "
 export CXXFLAGS=" $CF2 $CF3 "
 ./configure --prefix=$_INST_ --disable-shared --disable-soname-versions
 res=$?
 if [ $res -ne 0 ]; then
-    echo "retrying to compile libsodium"
-    sleep 32
+    echo "retrying to configure libsodium"
+    sleep 61
     ./autogen.sh
     ./configure --prefix=$_INST_ --disable-shared --disable-soname-versions || exit 1
 fi
