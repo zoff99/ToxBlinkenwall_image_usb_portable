@@ -345,7 +345,7 @@ locale -a
 
 # https://github.com/cdown/tzupdate
 # util to autodetect timezone from IP address
-pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate
+# pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate
 
 # install module used by "ext_keys_evdev.py" script to get keyboard input events
 python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev
