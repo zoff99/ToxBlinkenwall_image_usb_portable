@@ -94,11 +94,18 @@ fi
 device_="/dev/""$device_"
 
 # get full device path by uuid
-byuuid_device_=$(readlink -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228")
+byuuid_device_=$(readlink -f "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48")
+
+# ------- DEBUG ---------
+blkid
+ls -al /dev/disk/by-uuid
+ls -al "/dev/""$device_"
+sleep 5
+# ------- DEBUG ---------
 
 non_persistent=0
 
-if [ ! -e "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" ]; then
+if [ ! -e "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" ]; then
     echo "UUID device NOT found"
     echo '!!DEVICE ERROR D-004 !!'
     echo '** using non-persistent mode **'
@@ -129,7 +136,7 @@ if [ $non_persistent == 0 ]; then
     sleep 2
 
     # check if its the first boot ---------
-    mount -t ext4 "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" /mnt > /dev/null 2> /dev/null
+    mount -t ext4 "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" /mnt > /dev/null 2> /dev/null
     err=$?
     # check if its the first boot ---------
 
@@ -156,10 +163,37 @@ if [ $non_persistent == 0 ]; then
         echo "------- pick a strong password ------"
         echo ""
 
+
+# ------- DEBUG ---------
+blkid
+ls -al /dev/disk/by-uuid
+ls -al "/dev/""$device_"
+sleep 5
+# ------- DEBUG ---------
+
+
         # unmount and encrypt
-        umount -f "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" >/dev/null 2> /dev/null
-        cryptsetup -y -q luksFormat --uuid "0e113e75-b4df-418d-98f5-da6a763c1228" "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228"
+        umount -f "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" >/dev/null 2> /dev/null
+
+# ------- DEBUG ---------
+blkid
+ls -al /dev/disk/by-uuid
+ls -al "/dev/""$device_"
+sleep 5
+# ------- DEBUG ---------
+
+
+        cryptsetup -y -q luksFormat --uuid "0e113e75-b4df-418d-98f5-da6a763c1228" "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48"
         err2=$?
+
+# ------- DEBUG ---------
+blkid
+ls -al /dev/disk/by-uuid
+ls -al "/dev/""$device_"
+sleep 5
+# ------- DEBUG ---------
+
+
         if [ $err2 -eq 0 ]; then
             echo ""
             echo "------ UNLOCK data encryption ------"
@@ -198,11 +232,12 @@ if [ $non_persistent == 0 ]; then
                 done
             fi
         else
-            # error!! block forever
-            while [ 1 == 1 ]; do
-                echo '!!LUKS ERROR 001 !!'
-                sleep 10
-            done
+            # error!!
+            echo '!!LUKS ERROR 001 !!'
+            sleep 10
+            non_persistent=1
+            chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+            chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
         fi
     else
         echo "####################################"
@@ -250,7 +285,6 @@ if [ $non_persistent == 0 ]; then
 
     # copy phone book entries from persistent storage to actual usage dir
     cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/
-
 
 fi
 

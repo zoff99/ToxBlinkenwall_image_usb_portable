@@ -137,6 +137,7 @@ sleep 2
 #sed -i -e 's#main#main contrib non-free#' /etc/apt/sources.list
 echo 'deb http://ftp.debian.org/debian buster main contrib non-free
 deb http://security.debian.org/debian-security/ buster/updates main contrib non-free
+deb http://deb.debian.org/debian buster-backports main contrib non-free
 ' > /etc/apt/sources.list
 # -----------------
 cat /etc/apt/sources.list
@@ -172,17 +173,19 @@ apt-get install -y --force-yes --no-install-recommends git
 apt-get install -y --force-yes --no-install-recommends network-manager
 apt-get install -y --force-yes --no-install-recommends net-tools
 apt-get install -y --force-yes --no-install-recommends wireless-tools
-apt-get install -y --force-yes --no-install-recommends wpagui
+# apt-get install -y --force-yes --no-install-recommends wpagui
 apt-get install -y --force-yes --no-install-recommends curl
 apt-get install -y --force-yes --no-install-recommends openssh-client
-apt-get install -y --force-yes --no-install-recommends blackbox
+# apt-get install -y --force-yes --no-install-recommends blackbox
 apt-get install -y --force-yes --no-install-recommends nano
 apt-get install -y --force-yes ifupdown
 apt-get install -y --force-yes isc-dhcp-client
 apt-get install -y --force-yes alsa-utils
 apt-get install -y --force-yes libasound-dev
 apt-get install -y --force-yes v4l-utils
-apt-get install -y --force-yes v4l-conf
+
+apt-get -t buster-backports install -y -o "Dpkg::Options::=--force-confdef" --force-yes "v4l-conf"
+
 apt-get install -y --force-yes libv4l-dev
 apt-get install -y --force-yes libv4lconvert0
 apt-get install -y --force-yes --no-install-recommends adduser
@@ -220,7 +223,20 @@ apt-get install -y --force-yes amd64-microcode
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-setup-linux
 # apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-setup
 apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" console-data
+
+echo "####### cryptsetup #######"
+echo "####### cryptsetup #######"
+#ls -al /proc/mounts
+#mkdir -p /usr/share/initramfs-tools/conf-hooks.d/
+#echo 'export CRYPTSETUP=y' >> /usr/share/initramfs-tools/conf-hooks.d/forcecryptsetup
+#mkdir -p /etc/cryptsetup-initramfs/
+#echo 'CRYPTSETUP=y' >> /etc/cryptsetup-initramfs/conf-hook
+#mkdir -p /etc/initramfs-tools/conf.d
+#echo 'export CRYPTSETUP=y' >> /etc/initramfs-tools/conf.d/cryptsetup
+#
 apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" cryptsetup
+echo "####### cryptsetup #######"
+echo "####### cryptsetup #######"
 
 # reset
 # tput reset
@@ -244,10 +260,10 @@ libqrencode-dev vim nano \
 wget curl git make \
 autotools-dev libtool bc \
 libv4l-dev \
-libv4lconvert0 v4l-conf v4l-utils \
+libv4lconvert0 v4l-utils \
 pkg-config libjpeg-dev \
 libpulse-dev libconfig-dev \
-automake checkinstall \
+automake \
 check yasm \
 libasound2-dev \
 libasound2-plugins \
@@ -269,8 +285,11 @@ iputils-ping \
 hostname \
 gdb
 
-# rng-tools \
 
+apt-get install -y -o "Dpkg::Options::=--force-confdef" --force-yes util-linux
+
+
+apt-get -t buster-backports install -y -o "Dpkg::Options::=--force-confdef" --force-yes "checkinstall"
 
 apt-get purge -y --force-yes exim
 apt-get purge -y --force-yes exim4
@@ -392,7 +411,7 @@ printf 'systemctl restart NetworkManager\n' >> /etc/rc.local
 printf 'nmcli radio wifi on\n' >> /etc/rc.local
 printf 'pkill -f wpa_supplicant\n' >> /etc/rc.local
 printf 'timeout -k 6 4 ifdown wlan0\n' >> /etc/rc.local
-printf 'timeout -k 20 17 ifup wlan0\n' >> /etc/rc.local
+printf 'timeout -k 20 17 ifup wlan0 > /dev/null 2>/dev/null\n' >> /etc/rc.local
 printf 'set +e\n' >> /etc/rc.local
 printf 'touch /_boot_\n' >> /etc/rc.local
 printf 'systemctl disable cron\n' >> /etc/rc.local
@@ -587,7 +606,7 @@ cat \
 
 # create 25MB ext4 partition image -----------
 dd if=/dev/zero of=${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img bs=4k count=6000
-mkfs.ext4 -U "0e113e75-b4df-418d-98f5-da6a763c1228" -L tbwpersist ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img
+mkfs.ext4 -U "ffdbdad1-431e-426d-b1f9-2be903c83a48" -L tbwpersist ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img
 mkdir -p ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/
 mount -o loop ${_HOME_}/LIVE_BOOT/scratch/persist_ext4.img ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/
 touch ${_HOME_}/LIVE_BOOT/scratch/mnt_tmp/__tbw_persist_part__

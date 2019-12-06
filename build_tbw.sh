@@ -49,7 +49,7 @@ cd $_SRC_
 rm -Rf nasm
 git clone http://repo.or.cz/nasm.git
 cd nasm
-git checkout nasm-2.13.03
+git checkout nasm-2.14.02
 ./autogen.sh
 ./configure --prefix=$_INST_
 make -j $(nproc) || exit 1
@@ -339,8 +339,8 @@ if [ $res2 -eq 0 ]; then
  echo "compile: OK"
 
  # echo "clean up of compile files ..."
- # rm -Rf $_SRC_
- # rm -Rf $_INST_
+ rm -Rf $_SRC_
+ rm -Rf $_INST_
  echo "... ready"
 
 else

@@ -98,9 +98,6 @@ iface wlan0 inet dhcp
         mv -v "/tmp/abc.txt" "$wpa_conf_file_location"
         rm -f "/tmp/abc.txt" # just to be safe
 
-        # wpa_action wlan0 reload
-        # systemctl restart ifup@wlan0.service
-
     fi
 
     return 0
@@ -166,10 +163,10 @@ done
 echo ""
 
 # connect to any open WIFI in any case
-echo "x_dummy_x" > /tmp/wlan_ssid.txt
-echo "z_dummy_z" > /tmp/wlan_pass.txt
-echo ""          > /tmp/wlan_public.txt
-set_wlan_values  > /dev/null 2>&1
+# echo "x_dummy_x" > /tmp/wlan_ssid.txt
+# echo "z_dummy_z" > /tmp/wlan_pass.txt
+# echo ""          > /tmp/wlan_public.txt
+# set_wlan_values  > /dev/null 2>&1
 
 if [ $name_set -eq 1 ]; then
     if [ "$what""x" == "0x" ]; then
