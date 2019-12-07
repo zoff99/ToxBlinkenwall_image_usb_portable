@@ -158,7 +158,7 @@ if [ $non_persistent == 0 ]; then
 
         # unmount and encrypt
         umount -f "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" >/dev/null 2> /dev/null
-        cryptsetup -y -q luksFormat --uuid "0e113e75-b4df-418d-98f5-da6a763c1228" "$device_" #"/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48"
+        cryptsetup -y -q luksFormat --uuid "ffdbdad1-431e-426d-b1f9-2be903c83a48" "$device_" #"/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48"
         err2=$?
         if [ $err2 -eq 0 ]; then
             echo ""
@@ -166,7 +166,7 @@ if [ $non_persistent == 0 ]; then
             echo "---- ENTER your password again -----"
             echo ""
 
-            cryptsetup luksOpen "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" tbwdb
+            cryptsetup luksOpen "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" tbwdb
             err3=$?
             mkfs.ext4 -e panic -U "039dbad8-1784-4068-9500-33a440117cde" /dev/mapper/tbwdb >/dev/null 2> /dev/null
             if [ $err3 -eq 0 ]; then
@@ -218,7 +218,7 @@ if [ $non_persistent == 0 ]; then
         echo ""
 
         # try to unlock and mount
-        cryptsetup luksOpen "/dev/disk/by-uuid/0e113e75-b4df-418d-98f5-da6a763c1228" tbwdb
+        cryptsetup luksOpen "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" tbwdb
         err3=$?
         if [ $err3 -eq 0 ]; then
             mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
