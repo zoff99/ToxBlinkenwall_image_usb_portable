@@ -271,8 +271,6 @@ bc htop speedometer \
 ntp ntpstat \
 python-setuptools \
 python3-setuptools \
-python-pip \
-python3-pip \
 dnsutils \
 ifmetric \
 sysstat \
@@ -367,7 +365,10 @@ locale -a
 # pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate || pip install -U tzupdate
 
 # install module used by "ext_keys_evdev.py" script to get keyboard input events
-python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev
+# python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev
+apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python-evdev
+apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python3-evdev
+apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python3-libevdev
 
   rm -f /etc/cron.daily/apt-compat
   rm -f /etc/cron.daily/aptitude
