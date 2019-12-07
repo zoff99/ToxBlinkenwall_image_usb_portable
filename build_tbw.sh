@@ -345,8 +345,8 @@ if [ $res2 -eq 0 ]; then
  echo "compile: OK"
 
  # echo "clean up of compile files ..."
- # rm -Rf $_SRC_
- # rm -Rf $_INST_
+ rm -Rf $_SRC_
+ rm -Rf $_INST_
  echo "... ready"
 
 else

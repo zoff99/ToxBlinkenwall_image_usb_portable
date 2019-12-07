@@ -198,11 +198,12 @@ if [ $non_persistent == 0 ]; then
                 done
             fi
         else
-            # error!! block forever
-            while [ 1 == 1 ]; do
-                echo '!!LUKS ERROR 001 !!'
-                sleep 10
-            done
+            # error!!
+            echo '!!LUKS ERROR 001 !!'
+            sleep 10
+            non_persistent=1
+            chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+            chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
         fi
     else
         echo "####################################"

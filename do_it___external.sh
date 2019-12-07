@@ -175,7 +175,7 @@ apt-get install -y --force-yes --no-install-recommends wireless-tools
 # apt-get install -y --force-yes --no-install-recommends wpagui
 apt-get install -y --force-yes --no-install-recommends curl
 apt-get install -y --force-yes --no-install-recommends openssh-client
-apt-get install -y --force-yes --no-install-recommends blackbox
+# apt-get install -y --force-yes --no-install-recommends blackbox
 apt-get install -y --force-yes --no-install-recommends nano
 apt-get install -y --force-yes ifupdown
 apt-get install -y --force-yes isc-dhcp-client
@@ -269,7 +269,6 @@ iputils-ping \
 hostname \
 gdb
 
-# rng-tools \
 
 
 apt-get purge -y --force-yes exim
@@ -398,7 +397,7 @@ printf 'sleep 3\n' >> /etc/rc.local
 printf 'nmcli radio wifi on\n' >> /etc/rc.local
 printf 'pkill -f wpa_supplicant\n' >> /etc/rc.local
 printf 'timeout -k 6 4 ifdown wlan0\n' >> /etc/rc.local
-printf 'timeout -k 20 17 ifup wlan0\n' >> /etc/rc.local
+printf 'timeout -k 20 17 ifup wlan0 > /dev/null 2>/dev/null\n' >> /etc/rc.local
 printf 'set +e\n' >> /etc/rc.local
 printf 'touch /_boot_\n' >> /etc/rc.local
 printf 'systemctl disable cron\n' >> /etc/rc.local
