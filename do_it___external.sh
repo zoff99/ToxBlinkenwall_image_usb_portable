@@ -366,9 +366,8 @@ locale -a
 
 # install module used by "ext_keys_evdev.py" script to get keyboard input events
 # python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev || python3 -m pip install evdev
-apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python-evdev
-apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python3-evdev
-apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python3-libevdev
+apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python3-evdev || exit 1
+apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--force-confdef" python3-libevdev || exit 1
 
   rm -f /etc/cron.daily/apt-compat
   rm -f /etc/cron.daily/aptitude
@@ -408,7 +407,13 @@ printf 'openvt -s -w /encrypt_persistent.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 printf 'openvt -s -w /enter_screen_name.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
+printf 'systemctl stop "getty@tty1.service"\n' >> /etc/rc.local
+printf 'echo "" > "/home/pi/ToxBlinkenwall/toxblinkenwall/ext_keys_scripts/ext_keys.py"\n' >> /etc/rc.local
+printf '\n' >> /etc/rc.local
+### printf 'cat /etc/network/interfaces\n' >> /etc/rc.local
+printf 'sleep 1\n' >> /etc/rc.local
 printf 'systemctl restart NetworkManager\n' >> /etc/rc.local
+printf 'sleep 3\n' >> /etc/rc.local
 printf 'nmcli radio wifi on\n' >> /etc/rc.local
 printf 'pkill -f wpa_supplicant\n' >> /etc/rc.local
 printf 'timeout -k 6 4 ifdown wlan0\n' >> /etc/rc.local
@@ -494,20 +499,40 @@ fi
 
 echo "create debug fixup script"
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
-  echo '#! /bin/bash
+    echo '#! /bin/bash
 setterm -cursor on
 sudo loadkeys de
 export PATH=$PATH:/sbin:/usr/sbin
 ' > "/f.sh"
 
-  chmod a+rwx "/f.sh"
+    chmod a+rwx "/f.sh"
 EOF
 
 echo "enable predictable network interface names" # does NOT work for some reason, only the kernel boot param does
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
-rm -f /etc/systemd/network/99-default.link
-ln -sf /dev/null /etc/systemd/network/99-default.link
-ls -al /etc/systemd/network/99-default.link
+    rm -f /etc/systemd/network/99-default.link
+    ln -sf /dev/null /etc/systemd/network/99-default.link
+    ls -al /etc/systemd/network/99-default.link
+EOF
+
+echo "configure interfaces without network-manager" # -> stupid network manager changes this file on boot!?!
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+
+    mkdir -p /etc/network
+
+    echo '
+auto lo
+iface lo inet loopback
+
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+auto wlan0
+iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+' > /etc/network/interfaces_tbw
+
 EOF
 
 # echo "remove unused packages to make image smaller"
