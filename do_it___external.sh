@@ -397,7 +397,7 @@ printf 'sleep 3\n' >> /etc/rc.local
 printf 'nmcli radio wifi on\n' >> /etc/rc.local
 printf 'pkill -f wpa_supplicant\n' >> /etc/rc.local
 printf 'timeout -k 6 4 ifdown wlan0\n' >> /etc/rc.local
-printf 'timeout -k 20 17 ifup wlan0 > /dev/null 2>/dev/null\n' >> /etc/rc.local
+printf 'timeout -k 100 98 ifup wlan0\n' >> /etc/rc.local
 printf 'set +e\n' >> /etc/rc.local
 printf 'touch /_boot_\n' >> /etc/rc.local
 printf 'systemctl disable cron\n' >> /etc/rc.local
