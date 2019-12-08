@@ -25,6 +25,7 @@ jobs:
             openssl ca-certificates git sudo bc wget rsync
 
       - run: pwd; ls -al; id -a
+      - run: docker info
 
       - run: sudo mkdir -p /artefacts
       - run: sudo chmod a+rwx /artefacts
