@@ -15,6 +15,8 @@ download_full="0"
 
 
 echo "++++++++++++++++++++++++++"
+id -a
+pwd
 df -h
 sleep 1
 echo "++++++++++++++++++++++++++"
@@ -81,6 +83,7 @@ pkgs="
     grub-pc-bin
     grub-efi-amd64-bin
     mtools
+    sudo
 "
 
 for i in $pkgs ; do
