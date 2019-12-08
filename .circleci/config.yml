@@ -44,7 +44,7 @@ jobs:
       - run: sudo chmod a+rx /artefacts/enter_screen_name.sh
 
       #- run: sudo /artefacts/runme.sh
-      - run: sudo run_in_docker.sh
+      - run: sudo ./run_in_docker.sh
       - run: mkdir -p deploy2/
       - run: sudo chmod a+rwx /artefacts/debian-custom.iso
       - run: cp -av /artefacts/debian-custom.iso deploy2/debian-custom.iso
