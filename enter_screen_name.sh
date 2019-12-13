@@ -123,7 +123,7 @@ echo ""
 echo ' press "A" to enter your screename'
 echo ' press "N" to setup WIFI'
 echo ' press "F" to setup Public Free WIFI'
-echo "        or wait 3 seconds"
+echo "        or wait 6 seconds"
 echo ""
 
 screen_name=''
@@ -131,7 +131,7 @@ name_set=0
 what=0
 
 echo -n 'press "A" or "N" or "F" ';
-for _ in {1..3}; do
+for _ in {1..6}; do
     read -rs -n1 -t1 name1 > /dev/null 2>&1
     ret=$?
     if [ $ret -eq 0 ]; then
