@@ -24,6 +24,7 @@ chmod a+rwx /v.sh
 
 if [[ $(cat /proc/cmdline 2>/dev/null) =~ 'tbw_hw=1' ]]; then
     cp -av /home/pi/ToxBlinkenwall/toxblinkenwall/toxblinkenwall_hw_nvidia /home/pi/ToxBlinkenwall/toxblinkenwall/toxblinkenwall
+    chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/toxblinkenwall_hw_nvidia > /dev/null 2> /dev/null
     echo ""
     echo ""
     echo "--- using NVIDIA HW ACCEL ---"
@@ -250,8 +251,8 @@ if [ $non_persistent == 0 ]; then
     fi
 
     # copy phone book entries from persistent storage to actual usage dir
-    cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/
-
+    cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/ >/dev/null 2> /dev/null
+    chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/book_entry_*.txt >/dev/null 2> /dev/null
 
 fi
 

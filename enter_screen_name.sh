@@ -181,6 +181,7 @@ echo ""
 
 # restore toxname from persistent storage
 cp -av /home/pi/ToxBlinkenwall/toxblinkenwall/db/toxname.txt /home/pi/ToxBlinkenwall/toxblinkenwall/toxname.txt > /dev/null 2> /dev/null
+chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/toxname.txt > /dev/null 2> /dev/null
 
 # set values from user input
 if [ $name_set -eq 1 ]; then
@@ -190,6 +191,7 @@ if [ $name_set -eq 1 ]; then
             echo ""
             echo "Screenname will be : ""$screen_name"
             echo "$screen_name" > /home/pi/ToxBlinkenwall/toxblinkenwall/toxname.txt 2> /dev/null
+            chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/toxname.txt > /dev/null 2> /dev/null
             echo ""
             echo ""
             sleep 5

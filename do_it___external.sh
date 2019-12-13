@@ -284,7 +284,9 @@ dpkg \
 v86d \
 iputils-ping \
 hostname \
-gdb
+gdb \
+dialog \
+zbar-tools
 
 
 apt-get install -y -o "Dpkg::Options::=--force-confdef" --force-yes util-linux
