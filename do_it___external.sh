@@ -288,6 +288,10 @@ gdb \
 dialog \
 zbar-tools
 
+apt-get install -y -o "Dpkg::Options::=--force-confdef" --force-yes \
+libmagick-dev \
+gettext \
+libticonv-dev
 
 apt-get install -y -o "Dpkg::Options::=--force-confdef" --force-yes util-linux
 
@@ -497,6 +501,33 @@ if [ $res11 -ne 0 ]; then
     echo "******* ERROR building tbw *******"
     echo "******* ERROR building tbw *******"
     echo "******* ERROR building tbw *******"
+    echo ""
+    echo ""
+    exit 1
+fi
+
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+  id -a
+  res=0
+  mkdir -p "/home/pi/zbar/"
+  chmod a+rwx "/home/pi/zbar/"
+  chown pi:pi -R "/home/pi/zbar/"
+  echo "build zbar ..."
+  su - pi bash -c "cd /home/pi/zbar/; git clone https://github.com/zoff99/ZBar_deb || touch /home/pi/ERROR2"
+  su - pi bash -c "cd /home/pi/zbar/ZBar_deb/; bash do_it.sh || touch /home/pi/ERROR2"
+  if [ -e /home/pi/ERROR2 ]; then
+    exit 1
+  fi
+EOF
+
+res12=$?
+if [ $res12 -ne 0 ]; then
+    echo ""
+    echo ""
+    echo "******* ERROR building zbar *******"
+    echo "******* ERROR building zbar *******"
+    echo "******* ERROR building zbar *******"
+    echo "******* ERROR building zbar *******"
     echo ""
     echo ""
     exit 1
