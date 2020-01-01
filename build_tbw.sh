@@ -264,6 +264,73 @@ cp -av toxblinkenwall toxblinkenwall_nohw
 
 ## --------- build without HW Accceleration ---------
 
+## --------- build without HW Accceleration and ASAN ---------
+
+cd $_SRC_
+
+echo "using build from zoff99 repo"
+git clone https://github.com/zoff99/c-toxcore
+cd c-toxcore
+git checkout "zoff99/zoxcore_local_fork"
+
+ASAN_FLAGS=" -fno-omit-frame-pointer -fsanitize=address "
+
+./autogen.sh
+make clean
+export CFLAGS=" $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
+                --param=ssp-buffer-size=1 -ggdb3 -fstack-protector-all "
+export LDFLAGS="-L$_INST_/lib"
+
+./configure \
+--prefix=$_INST_ \
+--disable-soname-versions --disable-testing --disable-shared
+make -j $(nproc) || exit 1
+make install
+
+
+cd $_HOME_/ToxBlinkenwall/toxblinkenwall/
+
+cat toxblinkenwall.c | grep 'define HAVE_OUTPUT_OMX'
+sed -i -e 'sx#define HAVE_OUTPUT_OMXx#define HAVE_FRAMEBUFFERx' toxblinkenwall.c
+cat toxblinkenwall.c | grep 'define HAVE_FRAMEBUFFER'
+
+# set 640x480 camera resolution to get better fps
+cat toxblinkenwall.c | grep 'int video_high ='
+sed -i -e 's#int video_high = 1;#int video_high = 0;#' toxblinkenwall.c
+cat toxblinkenwall.c | grep 'int video_high ='
+
+gcc \
+$CF2 $CF3 \
+$ASAN_FLAGS \
+-fstack-protector-all \
+-Wno-unused-variable \
+-fPIC -export-dynamic -I$_INST_/include -o toxblinkenwall -lm \
+toxblinkenwall.c rb.c \
+-std=gnu99 \
+-L$_INST_/lib \
+$_INST_/lib/libtoxcore.a \
+$_INST_/lib/libtoxav.a \
+-lrt \
+$_INST_/lib/libopus.a \
+$_INST_/lib/libvpx.a \
+$_INST_/lib/libx264.a \
+$_INST_/lib/libavcodec.a \
+$_INST_/lib/libavutil.a \
+$_INST_/lib/libsodium.a \
+-lasound \
+-lpthread -lv4lconvert \
+-ldl || exit 1
+
+res2=$?
+
+ldd toxblinkenwall
+ls -hal toxblinkenwall
+file toxblinkenwall
+
+cp -av toxblinkenwall toxblinkenwall_nohw_asan
+
+## --------- build without HW Accceleration and ASAN ---------
+
 
 
 ## --------- build with nvidia HW Accceleration -----
