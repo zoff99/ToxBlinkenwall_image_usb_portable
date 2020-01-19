@@ -254,6 +254,10 @@ if [ $non_persistent == 0 ]; then
     cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/ >/dev/null 2> /dev/null
     chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/book_entry_*.txt >/dev/null 2> /dev/null
 
+    # copy phone custom bootstrap nodes file from persistent storage to actual usage dir
+    cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/custom_bootstrap_nodes.dat /home/pi/ToxBlinkenwall/toxblinkenwall/ >/dev/null 2> /dev/null
+    chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/custom_bootstrap_nodes.dat >/dev/null 2> /dev/null
+
 fi
 
 
