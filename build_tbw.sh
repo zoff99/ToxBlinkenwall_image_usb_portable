@@ -47,7 +47,8 @@ export PKG_CONFIG_PATH=$_INST_/lib/pkgconfig:/usr/local/lib/pkgconfig
 
 cd $_SRC_
 rm -Rf nasm
-git clone http://repo.or.cz/nasm.git
+# git clone http://repo.or.cz/nasm.git # site is down
+git clone https://github.com/unofficial-mirror/nasm
 cd nasm
 git checkout nasm-2.14.02
 ./autogen.sh
