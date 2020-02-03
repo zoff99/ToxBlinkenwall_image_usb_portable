@@ -83,21 +83,22 @@ echo ""
 echo "found USB boot device: /dev/""$device_"
 echo ""
 
-if [ "$device_""x" == "x" ]; then
-    # error!! block forever
-    while [ 1 == 1 ]; do
-        echo '!!DEVICE ERROR D-001 !!'
-        sleep 10
-    done
-fi
-
-# get full device path by some magick above
-device_="/dev/""$device_"
-
-# get full device path by uuid
-byuuid_device_=$(readlink -f "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48")
-
 non_persistent=0
+
+if [ "$device_""x" == "x" ]; then
+    device_="/dev/"'XXXXXXXXXYYYYYYYZZZZZZ'
+    byuuid_device_='AAAAAAAAAAAABBBBBBBBBBCCCCCCCDDDDDDDDDDDDDD'
+    lsblk -nP -o name,mountpoint
+    # error!!
+    echo '!!DEVICE ERROR D-001 !!'
+    sleep 10
+    non_persistent=1
+else
+    # get full device path by some magick above
+    device_="/dev/""$device_"
+    # get full device path by uuid
+    byuuid_device_=$(readlink -f "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48")
+fi
 
 if [ ! -e "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" ]; then
     echo "UUID device NOT found"
@@ -105,25 +106,22 @@ if [ ! -e "/dev/disk/by-uuid/ffdbdad1-431e-426d-b1f9-2be903c83a48" ]; then
     echo '** using non-persistent mode **'
     sleep 10
     non_persistent=1
-    chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-    chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
 else
     echo "found UUID device: ""$byuuid_device_"
     echo ""
 
     # compare if the result is the same
     if [ "$device_""x" != "$byuuid_device_""x" ]; then
-        # error!! block forever
-        # while [ 1 == 1 ]; do
-            echo '!!DEVICE ERROR D-002 !!'
-            echo '** using non-persistent mode **'
-            sleep 10
-            non_persistent=1
-            chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-            chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
-        # done
+        # error!!
+        echo '!!DEVICE ERROR D-002 !!'
+        echo '** using non-persistent mode **'
+        sleep 10
+        non_persistent=1
     fi
 fi
+
+chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
+chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
 
 if [ $non_persistent == 0 ]; then
 
