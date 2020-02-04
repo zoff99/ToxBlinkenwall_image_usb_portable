@@ -84,6 +84,7 @@ pkgs="
     grub-efi-amd64-bin
     mtools
     sudo
+    dosfstools
 "
 
 for i in $pkgs ; do
