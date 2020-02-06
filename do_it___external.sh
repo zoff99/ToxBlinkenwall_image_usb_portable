@@ -434,7 +434,7 @@ printf 'if [ ! -e /dev/fb0 ]; then modprobe vga16fb ; fi\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
-printf 'modprobe -r v4l2loopback\n' >> /etc/rc.local
+printf 'dkms autoinstall\n' >> /etc/rc.local
 printf 'modprobe v4l2loopback\n' >> /etc/rc.local
 printf 'v4l2-ctl -d /dev/video0 -c timeout=3000\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-fps 25 /dev/video0\n' >> /etc/rc.local
