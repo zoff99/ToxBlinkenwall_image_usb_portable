@@ -242,13 +242,6 @@ apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" cryptsetup
 echo "####### cryptsetup #######"
 echo "####### cryptsetup #######"
 
-# ---- VM_TEST ----
-apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good
-apt-get install -y --force-yes gstreamer1.0-plugins-bad
-apt-get install -y --force-yes gstreamer1.0-libav
-apt-get install -y --force-yes v4l2loopback-dkms
-# ---- VM_TEST ----
-
 # reset
 # tput reset
 # stty sane
@@ -463,7 +456,11 @@ printf 'if [ ! -e /dev/fb0 ]; then modprobe vga16fb ; fi\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
-printf 'dkms autoinstall\n' >> /etc/rc.local
+# printf 'dkms autoinstall\n' >> /etc/rc.local
+printf 'apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good\n' >> /etc/rc.local
+printf 'apt-get install -y --force-yes gstreamer1.0-plugins-bad\n' >> /etc/rc.local
+printf 'apt-get install -y --force-yes gstreamer1.0-libav\n' >> /etc/rc.local
+printf 'apt-get install -y --force-yes v4l2loopback-dkms\n' >> /etc/rc.local
 printf 'modprobe -r v4l2loopback\n' >> /etc/rc.local
 printf 'modprobe v4l2loopback\n' >> /etc/rc.local
 printf 'v4l2-ctl -d /dev/video0 -c timeout=3000\n' >> /etc/rc.local
@@ -545,6 +542,7 @@ cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
   fi
 EOF
 
+
 res12=$?
 if [ $res12 -ne 0 ]; then
     echo ""
@@ -605,6 +603,16 @@ EOF
 echo "reset apt options to default again"
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 mv -v /etc/apt/apt.conf_BACKUP /etc/apt/apt.conf
+EOF
+
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+# ---- VM_TEST ----
+# dkms autoinstall
+apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good
+apt-get install -y --force-yes gstreamer1.0-plugins-bad
+apt-get install -y --force-yes gstreamer1.0-libav
+# apt-get install -y --force-yes v4l2loopback-dkms
+# ---- VM_TEST ----
 EOF
 
 
