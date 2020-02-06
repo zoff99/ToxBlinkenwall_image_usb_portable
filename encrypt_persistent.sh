@@ -84,6 +84,7 @@ echo "found USB boot device: /dev/""$device_"
 echo ""
 
 non_persistent=0
+vm_mode=0
 
 if [ "$device_""x" == "x" ]; then
     device_="/dev/"'XXXXXXXXXYYYYYYYZZZZZZ'
@@ -120,10 +121,33 @@ else
     fi
 fi
 
+if [ -e "/dev/vda"]; then
+    echo "!!! /dev/vda found: Enabling VM Mode (unencrypted)"
+
+    mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
+
+    mount -t ext4 "/dev/vda" /home/pi/ToxBlinkenwall/toxblinkenwall/db/ > /dev/null 2> /dev/null
+    err=$?
+
+    if [ $err -eq 0 ]; then
+        sleep 10
+        vm_mode=1
+    else
+        # error!! block forever
+        while [ 1 == 1 ]; do
+            echo '!!DEVICE ERROR VM-001 !!'
+            echo '** using non-persistent mode **'
+            sleep 10
+            non_persistent=1
+            vm_mode=0
+        done
+    fi
+fi
+
 chown -R pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
 chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/ >/dev/null 2> /dev/null
 
-if [ $non_persistent == 0 ]; then
+if [ $non_persistent == 0 ] && [ $vm_mode == 0 ]; then
 
     sleep 2
 
@@ -248,6 +272,8 @@ if [ $non_persistent == 0 ]; then
         fi
     fi
 
+fi
+if [ $non_persistent == 0 ] || [ $vm_mode == 1 ]; then
     # copy phone book entries from persistent storage to actual usage dir
     cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/book_entry_*.txt /home/pi/ToxBlinkenwall/toxblinkenwall/ >/dev/null 2> /dev/null
     chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/book_entry_*.txt >/dev/null 2> /dev/null
@@ -255,7 +281,6 @@ if [ $non_persistent == 0 ]; then
     # copy phone custom bootstrap nodes file from persistent storage to actual usage dir
     cp -f /home/pi/ToxBlinkenwall/toxblinkenwall/db/custom_bootstrap_nodes.dat /home/pi/ToxBlinkenwall/toxblinkenwall/ >/dev/null 2> /dev/null
     chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/custom_bootstrap_nodes.dat >/dev/null 2> /dev/null
-
 fi
 
 
