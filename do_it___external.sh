@@ -223,9 +223,10 @@ apt-get install -y --force-yes --no-install-recommends -o "Dpkg::Options::=--for
 apt-get install -y --force-yes -o "Dpkg::Options::=--force-confdef" cryptsetup
 
 # ---- VM_TEST ----
-apt-get install -y --force-yes v4l2loopback-dkms v4l2loopback-utils gstreamer1.0-plugins-good || exit 1
-apt-get install -y --force-yes gstreamer1.0-plugins-bad || exit 1
-apt-get install -y --force-yes gstreamer1.0-libav || exit 1
+apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good
+apt-get install -y --force-yes gstreamer1.0-plugins-bad
+apt-get install -y --force-yes gstreamer1.0-libav
+apt-get install -y --force-yes v4l2loopback-dkms
 # ---- VM_TEST ----
 
 
