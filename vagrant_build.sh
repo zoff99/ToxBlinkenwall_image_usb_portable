@@ -25,6 +25,13 @@ chmod a+x ./artefacts/encrypt_persistent.sh
 cp -av enter_screen_name.sh ./artefacts/enter_screen_name.sh
 chmod a+x ./artefacts/enter_screen_name.sh
 
+cp -av vmscript.sh ./artefacts/vmscript.sh
+chmod a+x ./artefacts/vmscript.sh
+
+cp -av net.sh ./artefacts/net.sh
+chmod a+x ./artefacts/net.sh
+
+
 vagrant destroy -f
 vagrant up
 

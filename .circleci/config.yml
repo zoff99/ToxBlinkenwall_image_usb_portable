@@ -42,6 +42,10 @@ jobs:
       - run: sudo chmod a+rx /artefacts/encrypt_persistent.sh
       - run: sudo cp -av enter_screen_name.sh /artefacts/enter_screen_name.sh
       - run: sudo chmod a+rx /artefacts/enter_screen_name.sh
+      - run: sudo cp -av vmscript.sh /artefacts/vmscript.sh
+      - run: sudo chmod a+rx /artefacts/vmscript.sh
+      - run: sudo cp -av net.sh /artefacts/net.sh
+      - run: sudo chmod a+rx /artefacts/net.sh
 
       #- run: sudo /artefacts/runme.sh
       - run: sudo ./run_in_docker.sh

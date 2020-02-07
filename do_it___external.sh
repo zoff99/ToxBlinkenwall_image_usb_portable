@@ -456,6 +456,18 @@ printf 'if [ ! -e /dev/fb0 ]; then modprobe vga16fb ; fi\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
+printf 'apt-get install -y --force-yes virtualbox-guest-additions-iso\n' >> /etc/rc.local
+printf 'mount /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt\n' >> /etc/rc.local
+printf '/mnt/VBoxLinuxAdditions.run\n' >> /etc/rc.local
+printf 'rmmod vboxguest\n' >> /etc/rc.local
+printf 'modprobe vboxsf\n' >> /etc/rc.local
+printf 'mkdir /home/pi/vmshare\n' >> /etc/rc.local
+printf 'chown pi:pi /home/pi/vmshare\n' >> /etc/rc.local
+printf 'chmod a+rwx /home/pi/vmshare\n' >> /etc/rc.local
+printf 'mount -t vboxsf vmshare /home/pi/vmshare\n' >> /etc/rc.local
+printf 'chown pi:pi /home/pi/vmshare\n' >> /etc/rc.local
+printf 'chmod a+rwx /home/pi/vmshare\n' >> /etc/rc.local
+printf 'umount /mnt\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-plugins-bad\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-libav\n' >> /etc/rc.local
@@ -466,7 +478,8 @@ printf 'v4l2-ctl -d /dev/video0 -c timeout=3000\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-fps 25 /dev/video0\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-caps "video/x-raw,format=UYVY,width=640,height=480" /dev/video0\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-timeout-image /home/pi/ToxBlinkenwall/toxblinkenwall/gfx/loading_bar_25.png /dev/video0\n' >> /etc/rc.local
-printf 'su - pi bash -c "/home/pi/ToxBlinkenwall/toxblinkenwall/vmscript.sh" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
+printf 'chmod a+x /vmscript.sh\n' >> /etc/rc.local
+printf 'su - pi bash -c "/vmscript.sh" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf 'su - pi bash -c "/home/pi/ToxBlinkenwall/toxblinkenwall/initscript.sh start" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
@@ -501,6 +514,13 @@ ls -al $_HOME_/LIVE_BOOT/chroot/
 cp -av /artefacts/build_tbw.sh $_HOME_/LIVE_BOOT/chroot/home/pi/build_tbw.sh
 chmod a+rx $_HOME_/LIVE_BOOT/chroot/home/pi/build_tbw.sh
 ls -al $_HOME_/LIVE_BOOT/chroot/home/pi
+
+cp -av /artefacts/vmscript.sh $_HOME_/LIVE_BOOT/chroot/vmscript.sh
+chmod a+rx $_HOME_/LIVE_BOOT/chroot/vmscript.sh
+
+cp -av /artefacts/net.sh $_HOME_/LIVE_BOOT/chroot/net.sh
+chmod a+rx $_HOME_/LIVE_BOOT/chroot/net.sh
+
 
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
   id -a
