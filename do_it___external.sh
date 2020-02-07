@@ -456,7 +456,6 @@ printf 'if [ ! -e /dev/fb0 ]; then modprobe vga16fb ; fi\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
-# printf 'dkms autoinstall\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-plugins-bad\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-libav\n' >> /etc/rc.local
@@ -467,6 +466,7 @@ printf 'v4l2-ctl -d /dev/video0 -c timeout=3000\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-fps 25 /dev/video0\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-caps "video/x-raw,format=UYVY,width=640,height=480" /dev/video0\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-timeout-image /home/pi/ToxBlinkenwall/toxblinkenwall/gfx/loading_bar_25.png /dev/video0\n' >> /etc/rc.local
+printf 'su - pi bash -c "/home/pi/ToxBlinkenwall/toxblinkenwall/vmscript.sh" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf 'su - pi bash -c "/home/pi/ToxBlinkenwall/toxblinkenwall/initscript.sh start" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
@@ -607,11 +607,9 @@ EOF
 
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 # ---- VM_TEST ----
-# dkms autoinstall
 apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good
 apt-get install -y --force-yes gstreamer1.0-plugins-bad
 apt-get install -y --force-yes gstreamer1.0-libav
-# apt-get install -y --force-yes v4l2loopback-dkms
 # ---- VM_TEST ----
 EOF
 
