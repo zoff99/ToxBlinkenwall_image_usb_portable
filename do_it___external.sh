@@ -292,9 +292,8 @@ zbar-tools
 apt-get install -y -o "Dpkg::Options::=--force-confdef" --force-yes \
 libmagick-dev \
 gettext \
-libticonv-dev
-
-apt-get install -y -o "Dpkg::Options::=--force-confdef" --force-yes util-linux
+libticonv-dev \
+util-linux \
 
 
 apt-get -t buster-backports install -y -o "Dpkg::Options::=--force-confdef" --force-yes "checkinstall"
