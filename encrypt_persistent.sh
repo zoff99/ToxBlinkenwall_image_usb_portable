@@ -121,7 +121,7 @@ else
     fi
 fi
 
-if [ -e "/dev/vda"]; then
+if [ -e "/dev/vda" ]; then
     echo "!!! /dev/vda found: Enabling VM Mode (unencrypted)"
 
     mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/db >/dev/null 2> /dev/null
