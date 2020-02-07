@@ -412,6 +412,7 @@ echo "configure rc.local"
 
 printf '#!/bin/bash\n' > /etc/rc.local
 printf '\n' >> /etc/rc.local
+printf 'systemctl start "serial-getty@ttyS0.service"\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 printf 'openvt -s -w /encrypt_persistent.sh\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
