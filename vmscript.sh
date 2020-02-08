@@ -24,11 +24,13 @@ sudo chmod a+rwx /home/pi/vmshare/net.sh
 
 export PATH=/sbin:$PATH
 
+sudo bash /home/pi/vmshare/net.sh
+
 while [ 1 == 1 ]; do
     sleep 2
     sudo cp /home/pi/ToxBlinkenwall/toxblinkenwall/toxid.txt /home/pi/vmshare/
     sudo cp /home/pi/ToxBlinkenwall/toxblinkenwall/db/savedata.tox /home/pi/vmshare/savedata_bck.tox
     # !! DANGER !!
-    sudo bash /home/pi/vmshare/net.sh
+    sudo bash /home/pi/vmshare/netloop.sh
     # !! DANGER !!
 done

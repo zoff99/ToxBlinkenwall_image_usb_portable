@@ -8,7 +8,17 @@ tc qdisc del dev eth0 root
 
 # ----------------
 # 1) delay and packet loss
-tc qdisc add dev eth0 root netem loss 2% 5% delay 200ms 20ms distribution normal
+# tc qdisc add dev eth0 root netem loss 2% 5% delay 200ms 20ms distribution normal
+# ----------------
+
+# ----------------
+# 1a) simluate Samoa
+# tc qdisc add dev eth0 root netem delay 200ms 40ms 25% loss 15.3% 25% duplicate 1% corrupt 0.1% reorder 25% 50%
+# ----------------
+
+# ----------------
+# 1a) simluate abrupt loss
+tc qdisc add dev eth0 root netem loss gemodel 1% 10% 70% 0.1%
 # ----------------
 
 # ----------------
