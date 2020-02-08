@@ -468,6 +468,9 @@ printf 'mount -t vboxsf vmshare /home/pi/vmshare\n' >> /etc/rc.local
 printf 'chown pi:pi /home/pi/vmshare\n' >> /etc/rc.local
 printf 'chmod a+rwx /home/pi/vmshare\n' >> /etc/rc.local
 printf 'umount /mnt\n' >> /etc/rc.local
+printf 'cp -f /home/pi/vmshare/savedata.tox /home/pi/ToxBlinkenwall/toxblinkenwall/db/\n' >> /etc/rc.local
+printf 'chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/*\n' >> /etc/rc.local
+printf 'chmod uürwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/*\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-plugins-bad\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-libav\n' >> /etc/rc.local
@@ -485,8 +488,9 @@ printf '\n' >> /etc/rc.local
 printf 'su - pi bash -c "/home/pi/ToxBlinkenwall/toxblinkenwall/initscript.sh start" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
-printf 'sleep 120\n' >> /etc/rc.local
-printf 'gst-launch-1.0 -v videotestsrc pattern=snow ! "video/x-raw,width=640,height=480,framerate=25/1,format=UYVY" ! v4l2sink device=/dev/video0 &\n' >> /etc/rc.local
+printf 'sleep 80\n' >> /etc/rc.local
+# printf 'gst-launch-1.0 -v videotestsrc pattern=snow ! "video/x-raw,width=640,height=480,framerate=25/1,format=UYVY" ! v4l2sink device=/dev/video0 &\n' >> /etc/rc.local
+printf 'gst-launch-1.0 -v videotestsrc pattern=ball flip=1 animation-mode=frames ! "video/x-raw,width=640,height=480,framerate=25/1,format=UYVY" ! v4l2sink device=/dev/video0 &\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
@@ -623,6 +627,11 @@ EOF
 echo "reset apt options to default again"
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 mv -v /etc/apt/apt.conf_BACKUP /etc/apt/apt.conf
+EOF
+
+echo "add hosts entry"
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+echo '127.0.0.1     portabletbw' >> /etc/hosts
 EOF
 
 cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot

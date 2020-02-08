@@ -8,7 +8,7 @@ tc qdisc del dev eth0 root
 
 # ----------------
 # 1) delay and packet loss
-tc qdisc add dev eth0 root netem loss 20% 25% delay 200ms 20ms distribution normal
+tc qdisc add dev eth0 root netem loss 2% 5% delay 200ms 20ms distribution normal
 # ----------------
 
 # ----------------
