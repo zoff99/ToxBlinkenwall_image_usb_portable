@@ -490,8 +490,8 @@ printf 'su - pi bash -c "/home/pi/ToxBlinkenwall/toxblinkenwall/initscript.sh st
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
 printf 'sleep 80\n' >> /etc/rc.local
-# printf 'gst-launch-1.0 -v videotestsrc pattern=snow ! "video/x-raw,width=640,height=480,framerate=25/1,format=UYVY" ! v4l2sink device=/dev/video0 &\n' >> /etc/rc.local
-printf 'gst-launch-1.0 -v videotestsrc pattern=ball flip=1 animation-mode=frames ! "video/x-raw,width=640,height=480,framerate=25/1,format=UYVY" ! v4l2sink device=/dev/video0 &\n' >> /etc/rc.local
+printf 'gst-launch-1.0 -v videotestsrc pattern=snow ! "video/x-raw,width=640,height=480,framerate=25/1,format=UYVY" ! v4l2sink device=/dev/video0 &\n' >> /etc/rc.local
+# printf 'gst-launch-1.0 -v videotestsrc pattern=ball flip=1 animation-mode=frames ! "video/x-raw,width=640,height=480,framerate=25/1,format=UYVY" ! v4l2sink device=/dev/video0 &\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
 # ---- VM_TEST ----
 printf '\n' >> /etc/rc.local
