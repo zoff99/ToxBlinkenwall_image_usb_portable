@@ -470,7 +470,7 @@ printf 'chmod a+rwx /home/pi/vmshare\n' >> /etc/rc.local
 printf 'umount /mnt\n' >> /etc/rc.local
 printf 'cp -f /home/pi/vmshare/savedata.tox /home/pi/ToxBlinkenwall/toxblinkenwall/db/\n' >> /etc/rc.local
 printf 'chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall/db/*\n' >> /etc/rc.local
-printf 'chmod uürwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/*\n' >> /etc/rc.local
+printf 'chmod u+rwx /home/pi/ToxBlinkenwall/toxblinkenwall/db/*\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-plugins-bad\n' >> /etc/rc.local
 printf 'apt-get install -y --force-yes gstreamer1.0-libav\n' >> /etc/rc.local
@@ -481,6 +481,7 @@ printf 'v4l2-ctl -d /dev/video0 -c timeout=3000\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-fps 25 /dev/video0\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-caps "video/x-raw,format=UYVY,width=640,height=480" /dev/video0\n' >> /etc/rc.local
 printf 'v4l2loopback-ctl set-timeout-image /home/pi/ToxBlinkenwall/toxblinkenwall/gfx/loading_bar_25.png /dev/video0\n' >> /etc/rc.local
+printf 'su - pi bash -c "tor &" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
 printf 'chmod a+x /vmscript.sh\n' >> /etc/rc.local
 printf 'su - pi bash -c "/vmscript.sh" > /dev/null 2>/dev/null &\n' >> /etc/rc.local
 printf '\n' >> /etc/rc.local
@@ -638,6 +639,26 @@ cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
 # ---- VM_TEST ----
 apt-get install -y --force-yes v4l2loopback-utils gstreamer1.0-plugins-good
 apt-get install -y --force-yes gstreamer1.0-plugins-bad
+apt-get install -y --force-yes tor
+apt-get install -y --force-yes nyx
+apt-get purge -y --force-yes exim
+apt-get purge -y --force-yes exim4
+apt-get purge -y --force-yes exim4-base
+apt-get purge -y --force-yes exim4-config
+apt-get purge -y --force-yes mailutils
+apt-get purge -y --force-yes mysql-common
+# ---- VM_TEST ----
+EOF
+
+cat << EOF | chroot $_HOME_/LIVE_BOOT/chroot
+# ---- VM_TEST ----
+# use tor relay
+mkdir -p /home/pi/ToxBlinkenwall/toxblinkenwall/
+chown pi:pi /home/pi/
+chown pi:pi /home/pi/ToxBlinkenwall/
+chown pi:pi /home/pi/ToxBlinkenwall/toxblinkenwall
+touch /home/pi/ToxBlinkenwall/toxblinkenwall/OPTION_USETOR
+
 apt-get install -y --force-yes gstreamer1.0-libav
 # ---- VM_TEST ----
 EOF

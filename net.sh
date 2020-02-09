@@ -4,6 +4,8 @@ export PATH=/sbin:$PATH
 
 # clear all rules
 tc qdisc del dev eth0 root
+
+# display fules
 # tc -p qdisc ls dev eth0
 
 # ----------------
@@ -18,7 +20,7 @@ tc qdisc del dev eth0 root
 
 # ----------------
 # 1a) simluate abrupt loss
-tc qdisc add dev eth0 root netem loss gemodel 1% 10% 70% 0.1%
+# tc qdisc add dev eth0 root netem loss gemodel 1% 10% 70% 0.1%
 # ----------------
 
 # ----------------
@@ -31,7 +33,5 @@ tc qdisc add dev eth0 root netem loss gemodel 1% 10% 70% 0.1%
 # tc qdisc add dev eth0 root handle 1: tbf rate 256kbit buffer 1600 limit 3000
 # tc qdisc add dev eth0 parent 1:1 handle 10: netem delay 100ms
 # ----------------
-
-# tc -p qdisc ls dev eth0
 
 
