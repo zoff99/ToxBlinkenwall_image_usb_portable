@@ -433,8 +433,19 @@ export PULSE_PROP
 
 TBW_KILLSWITCH_ENGAGE=1
 export TBW_KILLSWITCH_ENGAGE
+
 ' >> ~/.profile
 
+#pactl unload-module module-echo-cancel
+#pactl load-module module-echo-cancel aec_method=webrtc
+
+#mkdir -p ~/.config/pulse
+#echo '
+#.nofail
+#load-module module-echo-cancel aec_method=webrtc
+#' > ~/.config/pulse/default.pa
+
+# aec_args=analog_gain_control=0 digital_gain_control=0 noise_suppression=1
 
 echo "build ready"
 
