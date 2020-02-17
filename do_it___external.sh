@@ -693,7 +693,7 @@ set default="0"
 set timeout=6
 
 menuentry "TBW Portable" {
-    linux /vmlinuz boot=live net.ifnames=0 quiet tbw_hw=0
+    linux /vmlinuz boot=live net.ifnames=0 quiet tbw_hw=0 console=ttyS0
     initrd /initrd
 }
 
