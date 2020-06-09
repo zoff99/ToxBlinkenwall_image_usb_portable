@@ -53,4 +53,3 @@ jobs:
       - store_artifacts:
           path: ~/work/deploy2
           destination: deploy
-
