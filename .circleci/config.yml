@@ -14,10 +14,7 @@ jobs:
       image: ubuntu-1604:201903-01
 
     steps:
-      # circleCI checkout fix
-      - run: wget "https://raw.githubusercontent.com/zoff99/ToxAndroidRefImpl/zoff99/dev003/.circleci/checkout_fix.sh" -O /tmp/c.sh
-      - run: bash /tmp/c.sh
-      #- checkout
+      - checkout
       - run: sudo pkill apt-get || echo dummy
       - run: apt --version
       - run: ls -al /etc/apt/sources.list.d/
