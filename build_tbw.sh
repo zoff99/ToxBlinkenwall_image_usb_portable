@@ -212,7 +212,7 @@ git checkout "zoff99/zoxcore_local_fork"
 
 ./autogen.sh
 make clean
-export CFLAGS=" $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
+export CFLAGS=" -DTOX_CAPABILITIES_ACTIVE $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
                 --param=ssp-buffer-size=1 -ggdb3 -fstack-protector-all "
 export LDFLAGS=-L$_INST_/lib
 
@@ -278,7 +278,7 @@ ASAN_FLAGS=" -fno-omit-frame-pointer -fsanitize=address "
 
 ./autogen.sh
 make clean
-export CFLAGS=" $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
+export CFLAGS=" -DTOX_CAPABILITIES_ACTIVE $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
                 --param=ssp-buffer-size=1 -ggdb3 -fstack-protector-all "
 export LDFLAGS="-L$_INST_/lib"
 
@@ -345,7 +345,7 @@ git checkout "zoff99/zoxcore_local_fork"
 
 ./autogen.sh
 make clean
-export CFLAGS=" -DHW_CODEC_CONFIG_TBW_LINNVENC $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
+export CFLAGS=" -DTOX_CAPABILITIES_ACTIVE -DHW_CODEC_CONFIG_TBW_LINNVENC $CF2 -D_GNU_SOURCE -I$_INST_/include/ -O3 \
                 --param=ssp-buffer-size=1 -ggdb3 -fstack-protector-all "
 export LDFLAGS=-L$_INST_/lib
 
